@@ -18,6 +18,7 @@ import java.util.List;
 @Data
 @Builder
 @Entity
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order-generator")
@@ -40,6 +41,10 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "shipping_id")
     private Shipping shipping;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
     @OneToMany(mappedBy = "order")
     private List<OrderProduct> orderProducts = new ArrayList<>();

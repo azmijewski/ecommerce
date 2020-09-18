@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.search.annotations.Field;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand-generator")
     @SequenceGenerator(name = "brand-generator", sequenceName = "next_brand_id")
     private Long id;
+    @Field
     private String name;
 
     @OneToMany(mappedBy = "brand")
