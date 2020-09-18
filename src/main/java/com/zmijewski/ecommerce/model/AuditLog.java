@@ -6,17 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class AuditLogs {
+@Entity
+public class AuditLog {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "audit-generator")
     @SequenceGenerator(name = "audit-generator", sequenceName = "next_audit_id")

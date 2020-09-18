@@ -26,6 +26,8 @@ public class User {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private Boolean isActive;
+    private String token;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
