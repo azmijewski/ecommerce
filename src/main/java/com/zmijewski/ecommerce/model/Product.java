@@ -34,6 +34,8 @@ public class Product {
     private BigDecimal price;
     @Field(analyze = Analyze.NO)
     private Boolean isAvailable;
+    @Column(columnDefinition = "text")
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "brand_id")

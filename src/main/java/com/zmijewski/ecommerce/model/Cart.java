@@ -29,7 +29,7 @@ public class Cart {
     @UpdateTimestamp
     private Date updatedAt;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 

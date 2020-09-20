@@ -32,8 +32,8 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Cart> carts = new ArrayList<>();
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
     @OneToMany(mappedBy = "user")
     private List<Address> addresses = new ArrayList<>();
     @OneToMany(mappedBy = "user")

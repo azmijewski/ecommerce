@@ -16,6 +16,8 @@ public interface ProductMapper {
             @Mapping(target = "category", source = "category.name")
     })
     ProductDTO mapToDTO(Product product);
+
+    @Mapping(target = "brand", source = "brand.name")
     ShortProductDTO mapToShortProductDTO(Product product);
     @Mappings({
             @Mapping(target = "brand", ignore = true),
