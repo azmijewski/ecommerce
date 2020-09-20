@@ -30,6 +30,8 @@ public class Order {
     @UpdateTimestamp
     private Date updatedAt;
 
+    private String token;
+
     @ManyToOne
     @JoinColumn(name = "order_status_id")
     private OrderStatus orderStatus;

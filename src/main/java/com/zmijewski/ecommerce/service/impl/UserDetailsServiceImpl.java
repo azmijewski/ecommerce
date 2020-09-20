@@ -1,15 +1,19 @@
-package com.zmijewski.ecommerce.service;
+package com.zmijewski.ecommerce.service.impl;
 
 import com.zmijewski.ecommerce.model.Role;
 import com.zmijewski.ecommerce.model.User;
 import com.zmijewski.ecommerce.repository.UserRepository;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -29,9 +33,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserDetails mapUserToUserDetail(User user) {
         Role role = user.getRole();
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getName());
+        List<GrantedAuthority> authorities;
+        if (Objects.nonNull(role)) {
+            authorities = Collections.singletonList(new SimpleGrantedAuthority(role.getName()));
+        } else {
+            authorities = Collections.emptyList();
+        }
         return new org.springframework.security.core.userdetails.User(user.getEmail(),
-                user.getPassword(), Collections.singletonList(authority));
+                user.getPassword(), authorities);
 
     }
 }
