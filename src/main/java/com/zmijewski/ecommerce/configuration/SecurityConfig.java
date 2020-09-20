@@ -1,6 +1,7 @@
 package com.zmijewski.ecommerce.configuration;
 
 import com.zmijewski.ecommerce.configuration.jwt.JwtAuthorizationFilter;
+import com.zmijewski.ecommerce.configuration.jwt.JwtUtils;
 import com.zmijewski.ecommerce.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,11 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
-    private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final JwtUtils jwtUtils;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtAuthorizationFilter jwtAuthorizationFilter) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService,  JwtUtils jwtUtils) {
         this.userDetailsService = userDetailsService;
-        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthorizationFilter(userDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class);
     }
     @Bean
     public PasswordEncoder passwordEncoder() {

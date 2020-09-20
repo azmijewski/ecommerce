@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
-@Component
 @Log4j2
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
