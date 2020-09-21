@@ -8,6 +8,7 @@ import com.zmijewski.ecommerce.mapper.CartMapper;
 import com.zmijewski.ecommerce.model.Cart;
 import com.zmijewski.ecommerce.model.CartProduct;
 import com.zmijewski.ecommerce.model.Product;
+import com.zmijewski.ecommerce.model.User;
 import com.zmijewski.ecommerce.repository.CartProductRepository;
 import com.zmijewski.ecommerce.repository.CartRepository;
 import com.zmijewski.ecommerce.repository.ProductRepository;
@@ -21,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -195,6 +197,88 @@ class CartServiceImplTest {
         //when && then
         assertThrows(IllegalArgumentException.class,
                 () -> cartService.deleteProductFromCart(1L, 1L, 2));
+    }
+    @Test
+    void shouldClearCart() {
+        //given
+        Product product = new Product();
+        product.setPrice(BigDecimal.TEN);
+        product.setId(1L);
+        CartProduct cartProduct = new CartProduct();
+        cartProduct.setQuantity(2);
+        cartProduct.setProduct(product);
+        when(cartProductRepository.findAllByCart(anyLong())).thenReturn(Collections.singletonList(cartProduct));
+        doNothing().when(productRepository).increaseProductQuantity(anyLong(), anyInt());
+        doNothing().when(cartRepository).updateCartPrice(any(), anyLong());
+        doNothing().when(cartProductRepository).delete(any());
+        //when
+        cartService.clearCart(1L);
+        //then
+        verify(productRepository).increaseProductQuantity(anyLong(), anyInt());
+        verify(cartRepository).updateCartPrice(any(), anyLong());
+        verify(cartProductRepository).delete(any());
+    }
+    @Test
+    void shouldDeleteCart() {
+        //given
+        Product product = new Product();
+        product.setPrice(BigDecimal.TEN);
+        product.setId(1L);
+        CartProduct cartProduct = new CartProduct();
+        cartProduct.setQuantity(2);
+        cartProduct.setProduct(product);
+        Cart cart = new Cart();
+        cart.setId(1L);
+        cart.setCartProducts(Collections.singletonList(cartProduct));
+        when(cartRepository.findById(anyLong())).thenReturn(Optional.of(cart));
+        when(cartProductRepository.findAllByCart(anyLong())).thenReturn(Collections.singletonList(cartProduct));
+        doNothing().when(productRepository).increaseProductQuantity(anyLong(), anyInt());
+        doNothing().when(cartRepository).updateCartPrice(any(), anyLong());
+        doNothing().when(cartProductRepository).delete(any());
+        //when
+        cartService.deleteCart(1L);
+        //then
+        verify(productRepository).increaseProductQuantity(anyLong(), anyInt());
+        verify(cartRepository).updateCartPrice(any(), anyLong());
+        verify(cartProductRepository).delete(any());
+        verify(cartRepository).delete(any());
+    }
+    @Test
+    void shouldNotDeleteCartIfNotExist() {
+        //given
+        when(cartRepository.findById(anyLong())).thenReturn(Optional.empty());
+        //when && then
+        assertThrows(CartNotFoundException.class,
+                () -> cartService.deleteCart(1L));
+    }
+    @Test
+    void shouldAssignCartToUser() {
+        //given
+        when(cartRepository.findById(anyLong())).thenReturn(Optional.of(new Cart()));
+        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(cartRepository.save(any())).thenReturn(new Cart());
+        //when
+        cartService.assignCartToUser("test@test", 1L);
+        //then
+        verify(cartRepository).save(any());
+        verifyNoMoreInteractions(cartRepository);
+        verifyNoInteractions(cartProductRepository, productRepository);
+    }
+    @Test
+    void shouldAssignCartToUserDeletePreviousCart() {
+        //given
+        Cart cart = new Cart();
+        cart.setId(1L);
+        User user = new User();
+        user.setCart(cart);
+        when(cartRepository.findById(anyLong())).thenReturn(Optional.of(new Cart()));
+        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(user));
+        //when
+        //when
+        cartService.assignCartToUser("test@test", 1L);
+        //then
+        verify(cartRepository).save(any());
+        verify(cartRepository).delete(any());
     }
 
 }
