@@ -1,4 +1,4 @@
-package com.zmijewski.ecommerce.service.impl;
+package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.CartDTO;
 import com.zmijewski.ecommerce.exception.CartNotFoundException;
@@ -14,6 +14,7 @@ import com.zmijewski.ecommerce.repository.CartRepository;
 import com.zmijewski.ecommerce.repository.ProductRepository;
 import com.zmijewski.ecommerce.repository.UserRepository;
 import com.zmijewski.ecommerce.service.CartService;
+import com.zmijewski.ecommerce.service.impl.CartServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +31,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CartServiceImplTest {
+class CartServiceTest {
     @InjectMocks
     CartServiceImpl cartService;
     @Mock

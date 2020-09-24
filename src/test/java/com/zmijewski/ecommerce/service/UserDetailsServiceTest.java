@@ -1,8 +1,9 @@
-package com.zmijewski.ecommerce.service.impl;
+package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.model.Role;
 import com.zmijewski.ecommerce.model.User;
 import com.zmijewski.ecommerce.repository.UserRepository;
+import com.zmijewski.ecommerce.service.impl.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,14 +12,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.booleanThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserDetailsServiceImplTest {
+class UserDetailsServiceTest {
     @InjectMocks
     UserDetailsServiceImpl userDetailsService;
     @Mock
@@ -58,5 +62,4 @@ class UserDetailsServiceImplTest {
         //when && then
         assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername("test"));
     }
-
 }

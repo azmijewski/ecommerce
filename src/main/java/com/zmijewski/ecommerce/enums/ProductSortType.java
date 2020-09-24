@@ -5,6 +5,8 @@ import org.apache.lucene.search.SortField;
 
 @Getter
 public enum ProductSortType {
+    ID_ASC("id", "asc", SortField.Type.LONG),
+    ID_DESC("id", "desc", SortField.Type.LONG),
     PRICE_ASC("price", "asc", SortField.Type.STRING),
     PRICE_DESC("price", "desc", SortField.Type.STRING),
     NAME_ASC("name", "asc", SortField.Type.STRING),

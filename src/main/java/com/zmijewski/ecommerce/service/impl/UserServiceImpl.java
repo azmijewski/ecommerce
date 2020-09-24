@@ -1,0 +1,216 @@
+package com.zmijewski.ecommerce.service.impl;
+
+import com.zmijewski.ecommerce.dto.*;
+import com.zmijewski.ecommerce.enums.UserSearchCriteria;
+import com.zmijewski.ecommerce.enums.UserSortType;
+import com.zmijewski.ecommerce.exception.EmailAlreadyExistException;
+import com.zmijewski.ecommerce.exception.RoleNotFoundException;
+import com.zmijewski.ecommerce.exception.UserNotFoundException;
+import com.zmijewski.ecommerce.mapper.UserMapper;
+import com.zmijewski.ecommerce.model.Role;
+import com.zmijewski.ecommerce.model.User;
+import com.zmijewski.ecommerce.properties.GuiProperties;
+import com.zmijewski.ecommerce.repository.RoleRepository;
+import com.zmijewski.ecommerce.repository.UserRepository;
+import com.zmijewski.ecommerce.repository.UserSearchRepository;
+import com.zmijewski.ecommerce.service.UserService;
+import com.zmijewski.ecommerce.specification.UserSearchSpecification;
+import com.zmijewski.ecommerce.util.EmailTemplateCreator;
+import com.zmijewski.ecommerce.util.PasswordGenerator;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.Map;
+import java.util.UUID;
+
+@Service
+@PropertySource("classpath:subject.properties")
+public class UserServiceImpl implements UserService {
+
+    private static final String USER_ROLE = "USER";
+    private static final String EMAIL_QUEUE = "emailQueue";
+
+    private final UserRepository userRepository;
+    private final UserSearchRepository userSearchRepository;
+    private final RabbitTemplate rabbitTemplate;
+    private final EmailTemplateCreator emailTemplateCreator;
+    private final GuiProperties guiProperties;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    private final String registrationSubject;
+    private final String resetPasswordSubject;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           UserSearchRepository userSearchRepository,
+                           RabbitTemplate rabbitTemplate,
+                           EmailTemplateCreator emailTemplateCreator,
+                           GuiProperties guiProperties,
+                           UserMapper userMapper,
+                           PasswordEncoder passwordEncoder,
+                           RoleRepository roleRepository,
+                           @Value("${register-subject}") String registrationSubject,
+                           @Value("${reset-password-subject}") String resetPasswordSubject) {
+        this.userRepository = userRepository;
+        this.userSearchRepository = userSearchRepository;
+        this.rabbitTemplate = rabbitTemplate;
+        this.emailTemplateCreator = emailTemplateCreator;
+        this.guiProperties = guiProperties;
+        this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+        this.registrationSubject = registrationSubject;
+        this.resetPasswordSubject = resetPasswordSubject;
+    }
+
+    @Override
+    public UserDTO findUserByEmail(String email) {
+        return userRepository.findActivatedUserByEmail(email)
+                .map(userMapper::mapToUserDTO)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
+    }
+
+    @Override
+    public Page<UserWithRoleDTO> findUsersWithRoles(int page, int size, UserSortType userSortType) {
+        Sort sort = Sort.by(Sort.Direction.fromString(userSortType.getSortType()), userSortType.getField());
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return userRepository.findAll(pageable)
+                .map(userMapper::mapToUserWithRoleDTO);
+    }
+
+    @Override
+    public Page<UserWithRoleDTO> findUsersWithRolesByCriteria(int page, int size, UserSortType userSortType, Map<UserSearchCriteria, String> criteriaMap) {
+        Sort sort = Sort.by(Sort.Direction.fromString(userSortType.getSortType()), userSortType.getField());
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Specification<User> specification = new UserSearchSpecification(criteriaMap);
+        return userRepository.findAll(specification, pageable)
+                .map(userMapper::mapToUserWithRoleDTO);
+    }
+
+    @Override
+    public Page<UserWithRoleDTO> searchUsersWithRoles(int page, int size, UserSortType userSortType, String searchWords) {
+        return userSearchRepository.searchForUsers(searchWords, page, size, userSortType)
+                .map(userMapper::mapToUserWithRoleDTO);
+    }
+
+
+    @Override
+    public UserWithAddressesDTO findUserWithAddresses(String email) {
+        return userRepository.findActivatedUserByEmail(email)
+                .map(userMapper::mapToUserWithAddressesDTO)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
+    }
+
+    @Override
+    public void registerUser(RegistrationDTO registration) {
+        User userToRegister = userMapper.mapRegistrationToUser(registration);
+        if (userRepository.existsByEmail(registration.getEmail())) {
+            throw new EmailAlreadyExistException("User with email: " + registration.getEmail() + " already exist");
+        }
+        userToRegister.setPassword(passwordEncoder.encode(registration.getPassword()));
+        userToRegister.setToken(UUID.randomUUID().toString());
+        userToRegister.setTokenCreatedAt(new Date());
+        userToRegister.setIsActive(false);
+        Role userRole = roleRepository.getByName(USER_ROLE);
+        userToRegister.setRole(userRole);
+        userRepository.save(userToRegister);
+        String emailContent = emailTemplateCreator.getRegistrationTemplate(guiProperties.getRegistrationUrl());
+        addMailSendToQueue(registration.getEmail(), registrationSubject, emailContent);
+    }
+
+    @Override
+    public Long addUser(UserWithRoleDTO userWithRole) {
+        User userToSave = userMapper.mapToUser(userWithRole.getUser());
+        if (userRepository.existsByEmail(userToSave.getEmail())) {
+            throw new EmailAlreadyExistException("User with email: " + userToSave.getEmail() + " already exist");
+        }
+        Role userRole = roleRepository.findById(userWithRole.getRoleId())
+                .orElseThrow(() -> new RoleNotFoundException("Could not find role with id: " + userWithRole.getRoleId()));
+        userToSave.setRole(userRole);
+        String password = PasswordGenerator.generatePassword();
+        userToSave.setPassword(passwordEncoder.encode(password));
+        userToSave.setIsActive(true);
+        Long result = userRepository.save(userToSave).getId();
+        String emailContent = emailTemplateCreator.getUserAddedTemplate(password);
+        addMailSendToQueue(userToSave.getEmail(), registrationSubject, emailContent);
+        return result;
+    }
+
+    @Override
+    public void modifyUser(String email, UserDTO user) {
+        User userToUpdate = userRepository.findActivatedUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
+        if (userRepository.existsByEmailAndOtherId(user.getEmail(), userToUpdate.getId())) {
+            throw new EmailAlreadyExistException("User with email: " + user.getEmail() + " already exist");
+        }
+        userMapper.mapDataToUpdate(userToUpdate, user);
+        userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public void deleteAccount(String email) {
+        User userToDelete = userRepository.findActivatedUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
+        User withMappedData = userMapper.mapDataToDelete(userToDelete);
+        withMappedData.setIsActive(false);
+        userRepository.save(withMappedData);
+    }
+
+    @Override
+    public void confirmAccount(String token) {
+        User userToConfirm = userRepository.findByToken(token)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with token:" + token));
+        userToConfirm.setIsActive(true);
+        userToConfirm.setToken(null);
+        userRepository.save(userToConfirm);
+    }
+
+
+    @Override
+    public void resetPassword(String email) {
+        User userToResetPassword = userRepository.findActivatedUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
+        String password = PasswordGenerator.generatePassword();
+        userToResetPassword.setPassword(passwordEncoder.encode(password));
+        userRepository.save(userToResetPassword);
+        String emailContent = emailTemplateCreator.getResetPasswordTemplate(password);
+        addMailSendToQueue(userToResetPassword.getEmail(), resetPasswordSubject, emailContent);
+    }
+
+    @Override
+    public void changePassword(String email, String newPassword) {
+        User userToChangePassword = userRepository.findActivatedUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
+        userToChangePassword.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(userToChangePassword);
+    }
+
+    @Override
+    public void sendNewToken(String email) {
+        User userToSetNewToken = userRepository.findActivatedUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
+        userToSetNewToken.setToken(UUID.randomUUID().toString());
+        userToSetNewToken.setIsActive(false);
+        userToSetNewToken.setTokenCreatedAt(new Date());
+        userRepository.save(userToSetNewToken);
+        String emailContent = emailTemplateCreator.getRegistrationTemplate(guiProperties.getRegistrationUrl());
+        addMailSendToQueue(userToSetNewToken.getEmail(), registrationSubject, emailContent);
+    }
+
+    private void addMailSendToQueue(String sendTo, String subject, String content) {
+        EmailDTO email = new EmailDTO();
+        email.setContent(content);
+        email.setSendTo(sendTo);
+        email.setSubject(subject);
+        rabbitTemplate.convertAndSend(EMAIL_QUEUE, email);
+    }
+}

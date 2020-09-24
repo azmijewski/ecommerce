@@ -1,4 +1,4 @@
-package com.zmijewski.ecommerce.service.impl;
+package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.ProductDTO;
 import com.zmijewski.ecommerce.dto.ShortProductDTO;
@@ -14,6 +14,7 @@ import com.zmijewski.ecommerce.model.Category;
 import com.zmijewski.ecommerce.model.Image;
 import com.zmijewski.ecommerce.model.Product;
 import com.zmijewski.ecommerce.repository.*;
+import com.zmijewski.ecommerce.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,7 +39,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceImplTest {
+class ProductServiceTest {
     @InjectMocks
     ProductServiceImpl productService;
     @Mock

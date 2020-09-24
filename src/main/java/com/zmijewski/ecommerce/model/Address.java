@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
 
 import javax.persistence.*;
 
@@ -18,8 +20,11 @@ public class Address {
     @SequenceGenerator(name = "address-generator", sequenceName = "next_address_id")
     private Long id;
     private String name;
+    @Field
     private String street;
+    @Field
     private String city;
+    @Field
     private String postalCode;
 
     @ManyToOne

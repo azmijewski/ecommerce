@@ -1,10 +1,11 @@
-package com.zmijewski.ecommerce.service.impl;
+package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.configuration.jwt.JwtUtils;
 import com.zmijewski.ecommerce.dto.jwt.AuthenticationRequest;
 import com.zmijewski.ecommerce.dto.jwt.RefreshTokenRequest;
 import com.zmijewski.ecommerce.dto.jwt.TokenResponse;
 import com.zmijewski.ecommerce.exception.CustomAuthenticationException;
+import com.zmijewski.ecommerce.service.impl.AuthorizationServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AuthorizationServiceImplTest {
+class AuthorizationServiceTest {
     @InjectMocks
     AuthorizationServiceImpl authorizationService;
     @Mock

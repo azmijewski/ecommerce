@@ -1,4 +1,4 @@
-package com.zmijewski.ecommerce.util;
+package com.zmijewski.ecommerce.specification;
 
 import com.zmijewski.ecommerce.enums.ProductSearchCriteria;
 import com.zmijewski.ecommerce.model.Product;

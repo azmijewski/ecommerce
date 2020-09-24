@@ -31,6 +31,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
     private static final String DESCENDING_TYPE = "desc";
 
 
+
     private static final String DELIMETER = "\\s";
 
     private final EntityManager em;
@@ -62,7 +63,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
                 .createQuery();
 
         booleanQueryBuilder.add(isAvailableQuery, BooleanClause.Occur.MUST);
-        FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(booleanQueryBuilder.build());
+        FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(booleanQueryBuilder.build(), Product.class);
         Sort sort;
         if (productSortType.getSortType().equals(DESCENDING_TYPE)) {
             sort = new Sort(SortField.FIELD_SCORE,
@@ -74,9 +75,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
         jpaQuery.setSort(sort);
         long totalElements = jpaQuery.getResultSize();
         jpaQuery.setFirstResult(page * size);
-        if (size != 0) {
-            jpaQuery.setMaxResults(size);
-        }
+        jpaQuery.setMaxResults(size);
         return new PageImpl<>(jpaQuery.getResultList(), PageRequest.of(page, size), totalElements);
 
 

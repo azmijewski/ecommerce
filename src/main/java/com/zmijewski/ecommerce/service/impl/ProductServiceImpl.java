@@ -15,7 +15,7 @@ import com.zmijewski.ecommerce.model.Image;
 import com.zmijewski.ecommerce.model.Product;
 import com.zmijewski.ecommerce.repository.*;
 import com.zmijewski.ecommerce.service.ProductService;
-import com.zmijewski.ecommerce.util.ProductSearchSpecification;
+import com.zmijewski.ecommerce.specification.ProductSearchSpecification;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

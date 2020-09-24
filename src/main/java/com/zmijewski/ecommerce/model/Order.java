@@ -1,11 +1,16 @@
 package com.zmijewski.ecommerce.model;
 
+import com.zmijewski.ecommerce.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.search.annotations.DateBridge;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Resolution;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -26,14 +31,16 @@ public class Order {
     private Long id;
     private BigDecimal totalPrice;
     @CreationTimestamp
+    @Field
+    @DateBridge(resolution = Resolution.DAY)
     private Date createdAt;
     @UpdateTimestamp
     private Date updatedAt;
 
+    @Field
     private String token;
 
-    @ManyToOne
-    @JoinColumn(name = "order_status_id")
+    @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
 
     @ManyToOne
