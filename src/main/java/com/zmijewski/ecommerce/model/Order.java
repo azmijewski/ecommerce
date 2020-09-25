@@ -7,10 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.search.annotations.DateBridge;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.annotations.Resolution;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -24,6 +21,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "orders")
+@Indexed
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order-generator")

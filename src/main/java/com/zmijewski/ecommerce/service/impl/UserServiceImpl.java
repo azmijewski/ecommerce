@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findUserByEmail(String email) {
-        return userRepository.findActivatedUserByEmail(email)
+        return userRepository.findByEmail(email)
                 .map(userMapper::mapToUserDTO)
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
     }
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserWithAddressesDTO findUserWithAddresses(String email) {
-        return userRepository.findActivatedUserByEmail(email)
+        return userRepository.findByEmail(email)
                 .map(userMapper::mapToUserWithAddressesDTO)
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
     }
@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void modifyUser(String email, UserDTO user) {
-        User userToUpdate = userRepository.findActivatedUserByEmail(email)
+        User userToUpdate = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
         if (userRepository.existsByEmailAndOtherId(user.getEmail(), userToUpdate.getId())) {
             throw new EmailAlreadyExistException("User with email: " + user.getEmail() + " already exist");
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteAccount(String email) {
-        User userToDelete = userRepository.findActivatedUserByEmail(email)
+        User userToDelete = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
         User withMappedData = userMapper.mapDataToDelete(userToDelete);
         withMappedData.setIsActive(false);
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void resetPassword(String email) {
-        User userToResetPassword = userRepository.findActivatedUserByEmail(email)
+        User userToResetPassword = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
         String password = PasswordGenerator.generatePassword();
         userToResetPassword.setPassword(passwordEncoder.encode(password));
@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(String email, String newPassword) {
-        User userToChangePassword = userRepository.findActivatedUserByEmail(email)
+        User userToChangePassword = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
         userToChangePassword.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(userToChangePassword);
@@ -196,7 +196,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendNewToken(String email) {
-        User userToSetNewToken = userRepository.findActivatedUserByEmail(email)
+        User userToSetNewToken = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
         userToSetNewToken.setToken(UUID.randomUUID().toString());
         userToSetNewToken.setIsActive(false);

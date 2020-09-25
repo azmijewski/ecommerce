@@ -19,6 +19,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>, 
 
     Boolean existsByEmail(String email);
 
+    Optional<User> findByEmail( String email);
+
     @Query("select case when count(u) > 0 then true else false end from User u where u.email = :email and u.id <> :id")
     Boolean existsByEmailAndOtherId(@Param("email") String email, @Param("id") Long id);
 }

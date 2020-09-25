@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @Builder
 @Entity
+@Indexed
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand-generator")

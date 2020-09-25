@@ -62,7 +62,7 @@ class UserServiceTest {
     @Test
     void shouldFindUserByEmailIfExist() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(userMapper.mapToUserDTO(any())).thenReturn(new UserDTO());
         //when
         UserDTO result = userService.findUserByEmail("test@test");
@@ -72,7 +72,7 @@ class UserServiceTest {
     @Test
     void shouldNotFindUserByEmailIfNotExist() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         //when && then
         assertThrows(UserNotFoundException.class, () -> userService.findUserByEmail("test@test"));
     }
@@ -119,7 +119,7 @@ class UserServiceTest {
     @Test
     void shouldFindUserWithAddressesByEmailIfExist() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(userMapper.mapToUserWithAddressesDTO(any())).thenReturn(new UserWithAddressesDTO());
         //when
         UserWithAddressesDTO result = userService.findUserWithAddresses("test@test");
@@ -129,7 +129,7 @@ class UserServiceTest {
     @Test
     void shouldNotFindUserWithAddressesByEmailIfNotExist() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         //when && then
         assertThrows(UserNotFoundException.class, () -> userService.findUserWithAddresses("test@test"));
     }
@@ -230,7 +230,7 @@ class UserServiceTest {
         UserDTO inputUser = UserDTO.builder()
                 .email("test@test")
                 .build();
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(userToUpdate));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(userToUpdate));
         when(userRepository.existsByEmailAndOtherId(anyString(), anyLong())).thenReturn(false);
         doNothing().when(userMapper).mapDataToUpdate(any(), any());
         when(userRepository.save(any())).thenReturn(new User());
@@ -242,7 +242,7 @@ class UserServiceTest {
     @Test
     void  shouldNotModifyUserIfNotFound() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         //when && then
         assertThrows(UserNotFoundException.class, () -> userService.modifyUser("test@test", new UserDTO()));
     }
@@ -255,7 +255,7 @@ class UserServiceTest {
         UserDTO inputUser = UserDTO.builder()
                 .email("test@test")
                 .build();
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(userToUpdate));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(userToUpdate));
         when(userRepository.existsByEmailAndOtherId(anyString(), anyLong())).thenReturn(true);
         //when && then
         assertThrows(EmailAlreadyExistException.class, () -> userService.modifyUser("test@test", inputUser));
@@ -263,7 +263,7 @@ class UserServiceTest {
     @Test
     void shouldDeleteAccount() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(userMapper.mapDataToDelete(any())).thenReturn(new User());
         when(userRepository.save(any())).thenReturn(new User());
         //when
@@ -274,7 +274,7 @@ class UserServiceTest {
     @Test
     void shouldNotDeleteAccountIfNotFound() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         //when && then
         assertThrows(UserNotFoundException.class, () -> userService.deleteAccount("test@test"));
         verifyNoMoreInteractions(userRepository);
@@ -300,7 +300,7 @@ class UserServiceTest {
     @Test
     void shouldResetPassword() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any())).thenReturn(new User());
         when(emailTemplateCreator.getResetPasswordTemplate(anyString())).thenReturn("test");
@@ -314,7 +314,7 @@ class UserServiceTest {
     @Test
     void shouldNotResetPasswordIfUserNotFound() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         //when && then
         assertThrows(UserNotFoundException.class, () -> userService.resetPassword("test@test"));
         verifyNoMoreInteractions(userRepository);
@@ -323,7 +323,7 @@ class UserServiceTest {
     @Test
     void shouldChangePassword() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any())).thenReturn(new User());
         //when
@@ -334,7 +334,7 @@ class UserServiceTest {
     @Test
     void shouldNotChangePasswordIfUserNotFound() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         //when && then
         assertThrows(UserNotFoundException.class, () -> userService.changePassword("test@test", "test"));
         verifyNoMoreInteractions(userRepository);
@@ -342,7 +342,7 @@ class UserServiceTest {
     @Test
     void shouldSendNewToken() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(userRepository.save(any())).thenReturn(new User());
         when(emailTemplateCreator.getRegistrationTemplate(anyString())).thenReturn("test");
         when(guiProperties.getRegistrationUrl()).thenReturn("http:localhost:4200/registration");
@@ -356,7 +356,7 @@ class UserServiceTest {
     @Test
     void shouldNotSendNewTokenIfUserNotFound() {
         //given
-        when(userRepository.findActivatedUserByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         //when && then
         assertThrows(UserNotFoundException.class, () -> userService.sendNewToken("test@test"));
         verifyNoMoreInteractions(userRepository);
