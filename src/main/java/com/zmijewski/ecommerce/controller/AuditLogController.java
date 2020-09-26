@@ -24,7 +24,7 @@ public class AuditLogController {
         this.auditLogService = auditLogService;
     }
     @GetMapping("logs")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Page<AuditLogDTO>> getAuditLogs(@RequestParam(name = "page") @Min(0) int page,
                                                           @RequestParam(name = "size") @Min(1) int size,
                                                           @RequestParam(name = "sort", defaultValue = "DATE_ASC") AuditLogSortType sortType) {

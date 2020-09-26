@@ -66,7 +66,7 @@ public class ProductController {
         return ResponseEntity.ok(result);
     }
     @PostMapping("products")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> saveProduct(@RequestPart(name = "data") @Valid ProductDTO productDTO,
                                          @RequestPart(name = "files")MultipartFile[] files) {
         log.info("Trying to save new Product with name: {}", productDTO.getName());
@@ -75,7 +75,7 @@ public class ProductController {
         return ResponseEntity.created(location).build();
     }
     @PutMapping("products/{productId}")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> modifyProduct(@PathVariable(name = "productId") Long productId,
                                            @RequestBody @Valid ProductDTO productDTO) {
         log.info("Modifying product with id: {}", productId);
@@ -83,14 +83,14 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("products/{productId}")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> deleteProduct(@PathVariable(name = "productId") Long productId) {
         log.info("Trying to delete product with id: {}", productId);
         productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
     @PutMapping("products/increasingQuantity")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> increaseProductQuantity(@RequestParam(name = "productId") Long productId,
                                                      @RequestParam(name = "quantity") @Min(1) Integer quantity) {
         log.info("Trying to increase product with id: {}, quantity by {}", productId, quantity);
@@ -98,7 +98,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
     @PutMapping("products/decreasingQuantity")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> decreaseProductQuantity(@RequestParam(name = "productId") Long productId,
                                                      @RequestParam(name = "quantity") @Min(1) Integer quantity) {
         log.info("Trying to increase product with id: {}, quantity by {}", productId, quantity);

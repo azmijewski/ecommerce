@@ -34,14 +34,14 @@ public class BrandController {
         return ResponseEntity.ok(result);
     }
     @PostMapping("brands")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> saveBrand(@RequestBody @Valid BrandDTO brandDTO) {
         log.info("Saving new brand with name: {}", brandDTO.getName());
         brandService.saveBrand(brandDTO);
         return ResponseEntity.noContent().build();
     }
     @PutMapping("brands/{brandId}")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> modifyBrand(@PathVariable(name = "brandId") Long brandId,
                                          @RequestBody @Valid BrandDTO brandDTO) {
         log.info("Modifying brand with id: {}", brandId);

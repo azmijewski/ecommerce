@@ -2,6 +2,7 @@ package com.zmijewski.ecommerce.configuration.jwt;
 
 import com.zmijewski.ecommerce.service.impl.UserDetailsServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,6 +55,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             log.error("Unable to get token jwt");
         } catch (ExpiredJwtException e) {
             log.error("Token is expired");
+        } catch (MalformedJwtException e) {
+            log.error("Malformed token");
         }
     }
 }

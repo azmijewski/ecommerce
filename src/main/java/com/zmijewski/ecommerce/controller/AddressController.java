@@ -21,14 +21,14 @@ public class AddressController {
         this.addressService = addressService;
     }
     @GetMapping("addresses")
-    @Secured({"USER"})
+    @Secured({"ROLE_USER"})
     public ResponseEntity<List<AddressDTO>> getAddressesForUser(Principal principal) {
         log.info("Getting addresses for user: {}", principal.getName());
         List<AddressDTO> result = addressService.getAddressesForUser(principal.getName());
         return ResponseEntity.ok(result);
     }
     @PostMapping("addresses")
-    @Secured({"USER"})
+    @Secured({"ROLE_USER"})
     public ResponseEntity<?> addAddressForUser(Principal principal,
                                                @RequestBody @Valid AddressDTO addressDTO) {
         log.info("Adding address for user: {}", principal.getName());
@@ -36,14 +36,14 @@ public class AddressController {
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("addresses/{addressId}")
-    @Secured({"USER", "ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> deleteAddress(@PathVariable(name = "addressId") Long addressId) {
         log.info("Deleting address with id: {}", addressId);
         addressService.deleteAddress(addressId);
         return ResponseEntity.noContent().build();
     }
     @PutMapping("addresses/{addressId}")
-    @Secured({"USER", "ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> modifyAddress(@PathVariable(name = "addressId") Long addressId,
                                                @RequestBody @Valid AddressDTO addressDTO) {
         log.info("Modifying address with id: {}", addressId);

@@ -21,6 +21,11 @@ import java.util.List;
 @Builder
 @Entity
 @Indexed
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "user with address", attributeNodes = {
+                @NamedAttributeNode(value = "addresses")
+        })
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user-generator")

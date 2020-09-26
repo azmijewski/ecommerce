@@ -27,7 +27,7 @@ public class CartController {
         return ResponseEntity.ok(result);
     }
     @GetMapping("cartByUser")
-    @Secured({"USER"})
+    @Secured({"ROLE_USER"})
     public ResponseEntity<CartDTO> getCartByUser(Principal principal) {
         log.info("Getting cart for user: {}", principal.getName());
         CartDTO result = cartService.getCartByUser(principal.getName());
@@ -68,7 +68,7 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
     @PutMapping("/carts/{cartId}/toUser")
-    @Secured({"USER"})
+    @Secured({"ROLE_USER"})
     public ResponseEntity<?> assignCartToUser(Principal principal,
                                               @PathVariable(name = "cartId") Long cartId) {
         log.info("Assigning cart with id: {} to user: {}", cartId, principal.getName());

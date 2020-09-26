@@ -1,4 +1,4 @@
-package com.zmijewski.ecommerce.controller;
+package com.zmijewski.ecommerce.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

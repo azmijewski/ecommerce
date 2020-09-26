@@ -1,6 +1,7 @@
 package com.zmijewski.ecommerce.repository;
 
 import com.zmijewski.ecommerce.model.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -23,4 +24,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>, 
 
     @Query("select case when count(u) > 0 then true else false end from User u where u.email = :email and u.id <> :id")
     Boolean existsByEmailAndOtherId(@Param("email") String email, @Param("id") Long id);
+
+    @EntityGraph("user with address")
+    Optional<User> findWithAddressesByEmail(@Param("email") String email);
+
 }

@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserWithAddressesDTO findUserWithAddresses(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findWithAddressesByEmail(email)
                 .map(userMapper::mapToUserWithAddressesDTO)
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
     }

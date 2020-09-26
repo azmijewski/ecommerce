@@ -33,7 +33,7 @@ public class UserController {
 
 
     @GetMapping("users/userByEmail")
-    @Secured({"USER", "ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<UserDTO> getUserByEmail(@RequestParam(name = "email") String email) {
         log.info("Getting user with email: {}", email);
         UserDTO result = userService.findUserByEmail(email);
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("usersWithRoles")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Page<UserWithRoleDTO>> getUsersWithRoles(@RequestParam(name = "page") @Min(0) int page,
                                                                    @RequestParam(name = "size") @Min(1) int size,
                                                                    @RequestParam(name = "sort", defaultValue = "ID_ASC") UserSortType sortType) {
@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping("usersWithRolesByCriteria")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Page<UserWithRoleDTO>> getUsersWithRolesByCriteria(@RequestParam(name = "page") @Min(0) int page,
                                                                              @RequestParam(name = "size") @Min(1) int size,
                                                                              @RequestParam(name = "sort", defaultValue = "ID_ASC") UserSortType sortType,
@@ -61,7 +61,7 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
     @PostMapping("usersWithRoles")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Page<UserWithRoleDTO>> searchUsersWithRoles(@RequestParam(name = "page") @Min(0) int page,
                                                                       @RequestParam(name = "size") @Min(1) int size,
                                                                       @RequestParam(name = "sort", defaultValue = "ID_ASC") UserSortType sortType,
@@ -71,7 +71,7 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
     @GetMapping("users/logged")
-    @Secured({"USER", "ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<UserWithAddressesDTO> getLoggedUser(Principal principal) {
         log.info("GetTing logged user data with email: {}", principal.getName());
         UserWithAddressesDTO result = userService.findUserWithAddresses(principal.getName());
@@ -84,7 +84,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("users")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> addNewUser(@RequestBody @Valid UserWithRoleDTO userWithRoleDTO) {
         log.info("Trying to add new user with email: {}", userWithRoleDTO.getUser().getEmail());
         userService.addUser(userWithRoleDTO);
@@ -93,7 +93,7 @@ public class UserController {
         return ResponseEntity.created(location).build();
     }
     @PutMapping("users/logged")
-    @Secured({"USER", "ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> modifyLoggedUser(Principal principal,
                                                @RequestBody @Valid UserDTO userDTO) {
         log.info("Modifying user with email: {}", principal.getName());
@@ -101,14 +101,14 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("users/logged")
-    @Secured({"USER", "ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> deleteLoggedUserAccount(Principal principal) {
         log.info("Deleting user with email: {}", principal.getName());
         userService.deleteAccount(principal.getName());
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("users/userByEmail")
-    @Secured({"ADMIN"})
+    @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> deleteUserAccount(@RequestParam(name = "email") String email) {
         log.info("Deleting user with email: {}", email);
         userService.deleteAccount(email);
@@ -142,7 +142,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
     @PutMapping("users/logged/credential")
-    @Secured({"USER", "ADMIN"})
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<?> changePassword (Principal principal,
                                              @RequestBody @Valid CredentialDTO credentialDTO) {
         log.info("Trying to change password for user: {}", principal.getName());
