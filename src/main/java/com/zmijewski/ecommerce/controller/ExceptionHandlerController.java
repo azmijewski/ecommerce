@@ -2,12 +2,12 @@ package com.zmijewski.ecommerce.controller;
 
 import com.zmijewski.ecommerce.dto.ApiError;
 import com.zmijewski.ecommerce.exception.*;
+import com.zmijewski.ecommerce.service.AuditLogService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +16,12 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 @Log4j2
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
+
+    private final AuditLogService auditLogService;
+
+    public ExceptionHandlerController(AuditLogService auditLogService) {
+        this.auditLogService = auditLogService;
+    }
 
     @ExceptionHandler(AddressNotFoundException.class)
     protected ResponseEntity<ApiError> handleAddressNotFound(AddressNotFoundException ex, HttpServletRequest request) {
@@ -76,6 +82,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     private <T extends RuntimeException> ApiError handleException(T ex, HttpServletRequest request, HttpStatus httpStatus) {
         log.error(ex);
+        auditLogService.createErrorAuditLog(ex.getMessage());
         return ApiError.builder()
                 .message(ex.getMessage())
                 .status(httpStatus)

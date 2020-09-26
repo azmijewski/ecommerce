@@ -19,5 +19,7 @@ public class Shipping {
     private String name;
     private BigDecimal price;
     private Boolean isAvailable;
+    @Enumerated(EnumType.STRING)
+    private PaymentType paymentType;
 
 }

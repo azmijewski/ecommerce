@@ -12,6 +12,7 @@ public enum UserSortType {
     LASTNAME_DESC("lastName", "desc", SortField.Type.STRING),
     EMAIL_ASC("email", "asc", SortField.Type.STRING),
     EMAIL_DESC("email", "desc", SortField.Type.STRING);
+
     String field;
     String sortType;
     SortField.Type sortFieldType;

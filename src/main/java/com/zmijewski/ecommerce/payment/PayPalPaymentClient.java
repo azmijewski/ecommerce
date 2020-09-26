@@ -53,7 +53,6 @@ public class PayPalPaymentClient implements OnlinePaymentClient {
 
         Payer payer = createPayer(createOrderRequest);
 
-
         RedirectUrls redirectUrls = new RedirectUrls();
         redirectUrls.setReturnUrl(guiProperties.getRedirectOnlinePaymentUrl());
         redirectUrls.setCancelUrl(guiProperties.getRedirectCancelOnlinePaymentUrl());

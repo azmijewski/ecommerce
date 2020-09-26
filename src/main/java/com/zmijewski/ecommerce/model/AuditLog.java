@@ -1,5 +1,6 @@
 package com.zmijewski.ecommerce.model;
 
+import com.zmijewski.ecommerce.enums.AuditLogType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.Date;
 @Data
 @Builder
 @Entity
+@Table
 public class AuditLog {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "audit-generator")
@@ -22,4 +24,6 @@ public class AuditLog {
     private String message;
     @CreationTimestamp
     private Date createdAt;
+    @Enumerated(EnumType.STRING)
+    private AuditLogType type;
 }
