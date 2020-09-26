@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class PaymentServiceResponse {
+public class CreateOrderResponse {
     private String redirectUrl;
     private String orderId;
 

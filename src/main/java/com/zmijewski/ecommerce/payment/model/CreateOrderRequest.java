@@ -8,7 +8,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class PaymentServiceRequest {
+public class CreateOrderRequest {
     private BigDecimal totalAmount;
     private String currency = "PLN";
+    private String email;
+    private String firstName;
+    private String lastName;
 }

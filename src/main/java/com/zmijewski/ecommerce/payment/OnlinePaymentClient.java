@@ -1,8 +1,11 @@
 package com.zmijewski.ecommerce.payment;
 
-import com.zmijewski.ecommerce.payment.model.PaymentServiceRequest;
-import com.zmijewski.ecommerce.payment.model.PaymentServiceResponse;
+import com.zmijewski.ecommerce.payment.model.CompleteOrderRequest;
+import com.zmijewski.ecommerce.payment.model.CompleteOrderResponse;
+import com.zmijewski.ecommerce.payment.model.CreateOrderRequest;
+import com.zmijewski.ecommerce.payment.model.CreateOrderResponse;
 
 public interface OnlinePaymentClient {
-    PaymentServiceResponse createPayment(PaymentServiceRequest paymentServiceRequest);
+    CreateOrderResponse createPayment(CreateOrderRequest createOrderRequest);
+    CompleteOrderResponse completeOrder(CompleteOrderRequest completeOrderRequest);
 }
