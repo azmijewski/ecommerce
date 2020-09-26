@@ -15,4 +15,11 @@ public class ResponseUriBuilder {
                 .buildAndExpand(id)
                 .toUri();
     }
+    public URI buildUriWithAddedPathAndEmail(String path, String email) {
+        return ServletUriComponentsBuilder.fromCurrentRequest()
+                .path(path)
+                .queryParam("email", email)
+                .build()
+                .toUri();
+    }
 }

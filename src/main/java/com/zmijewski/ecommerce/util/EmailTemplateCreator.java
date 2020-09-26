@@ -1,11 +1,14 @@
 package com.zmijewski.ecommerce.util;
 
+import com.zmijewski.ecommerce.properties.GuiProperties;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 @Component
 public class EmailTemplateCreator {
+
+    private final GuiProperties guiProperties;
 
     private static final String LINK = "link";
     private static final String PASSWORD = "password";
@@ -17,11 +20,13 @@ public class EmailTemplateCreator {
 
     private final TemplateEngine templateEngine;
 
-    public EmailTemplateCreator(TemplateEngine templateEngine) {
+    public EmailTemplateCreator(GuiProperties guiProperties, TemplateEngine templateEngine) {
+        this.guiProperties = guiProperties;
         this.templateEngine = templateEngine;
     }
 
-    public String getRegistrationTemplate(String confirmUrl) {
+    public String getRegistrationTemplate(String token) {
+        String confirmUrl = guiProperties.getRegistrationUrl() + token;
         Context context = new Context();
         context.setVariable(LINK, confirmUrl);
         return templateEngine.process(REGISTRATION_TEMPLATE, context);
@@ -31,9 +36,10 @@ public class EmailTemplateCreator {
         context.setVariable(PASSWORD, password);
         return templateEngine.process(USER_ADDED_TEMPLATE, context);
     }
-    public String getResetPasswordTemplate(String newPassword) {
+    public String getResetPasswordTemplate(String token) {
+        String confirmUrl = guiProperties.getRegistrationUrl() + token;
         Context context = new Context();
-        context.setVariable(PASSWORD, newPassword);
+        context.setVariable(LINK, confirmUrl);
         return templateEngine.process(RESET_PASSWORD_TEMPLATE, context);
     }
 }

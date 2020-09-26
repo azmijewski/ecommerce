@@ -3,7 +3,7 @@ package com.zmijewski.ecommerce.payment;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
-import com.zmijewski.ecommerce.exception.PaymentCreationException;
+import com.zmijewski.ecommerce.exception.PaymentExecutionException;
 import com.zmijewski.ecommerce.payment.model.CompleteOrderRequest;
 import com.zmijewski.ecommerce.payment.model.CompleteOrderResponse;
 import com.zmijewski.ecommerce.payment.model.CreateOrderRequest;
@@ -14,7 +14,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -48,8 +48,7 @@ public class PayPalPaymentClient implements OnlinePaymentClient {
 
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
-        List<Transaction> transactions = new ArrayList<Transaction>();
-        transactions.add(transaction);
+        List<Transaction> transactions = Collections.singletonList(transaction);
 
         Payer payer = createPayer(createOrderRequest);
 
@@ -68,13 +67,13 @@ public class PayPalPaymentClient implements OnlinePaymentClient {
             createdPayment = payment.create(apiContext);
         } catch (PayPalRESTException e) {
             log.error(e);
-            throw new PaymentCreationException("Could not create payment");
+            throw new PaymentExecutionException("Could not create payment");
         }
         String redirectUrl = createdPayment.getLinks().stream()
                 .filter(link -> APPROVAL_URL.equals(link.getRel()))
                 .findFirst()
                 .map(Links::getHref)
-                .orElseThrow(() -> new PaymentCreationException("Could not get redirect url from PayPal"));
+                .orElseThrow(() -> new PaymentExecutionException("Could not get redirect url from PayPal"));
         CreateOrderResponse response = new CreateOrderResponse();
         response.setRedirectUrl(redirectUrl);
         response.setOrderId(createdPayment.getId());
@@ -95,7 +94,7 @@ public class PayPalPaymentClient implements OnlinePaymentClient {
             executedPayment = payment.execute(apiContext, paymentExecution);
         } catch (PayPalRESTException e) {
             log.error(e);
-            throw new PaymentCreationException("Could not execute payment with id: " + completeOrderRequest.getPaymentId());
+            throw new PaymentExecutionException("Could not execute payment with id: " + completeOrderRequest.getPaymentId());
         }
         return new CompleteOrderResponse(executedPayment.getId());
     }

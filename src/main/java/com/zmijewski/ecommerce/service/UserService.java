@@ -21,7 +21,8 @@ public interface UserService {
     void modifyUser(String email, UserDTO user);
     void deleteAccount(String email);
     void confirmAccount(String token);
-    void resetPassword(String email);
+    void resetPassword(String token, String newPassword);
     void changePassword(String email, String newPassword);
-    void sendNewToken(String email);
+    void sendNewRegistrationToken(String email);
+    void sendResetPasswordToken(String email);
 }

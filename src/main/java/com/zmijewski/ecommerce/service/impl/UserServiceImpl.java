@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
     private final UserSearchRepository userSearchRepository;
     private final RabbitTemplate rabbitTemplate;
     private final EmailTemplateCreator emailTemplateCreator;
-    private final GuiProperties guiProperties;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
@@ -54,7 +53,6 @@ public class UserServiceImpl implements UserService {
                            UserSearchRepository userSearchRepository,
                            RabbitTemplate rabbitTemplate,
                            EmailTemplateCreator emailTemplateCreator,
-                           GuiProperties guiProperties,
                            UserMapper userMapper,
                            PasswordEncoder passwordEncoder,
                            RoleRepository roleRepository,
@@ -64,7 +62,6 @@ public class UserServiceImpl implements UserService {
         this.userSearchRepository = userSearchRepository;
         this.rabbitTemplate = rabbitTemplate;
         this.emailTemplateCreator = emailTemplateCreator;
-        this.guiProperties = guiProperties;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
@@ -117,13 +114,14 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistException("User with email: " + registration.getEmail() + " already exist");
         }
         userToRegister.setPassword(passwordEncoder.encode(registration.getPassword()));
-        userToRegister.setToken(UUID.randomUUID().toString());
+        String token = UUID.randomUUID().toString();
+        userToRegister.setToken(token);
         userToRegister.setTokenCreatedAt(new Date());
         userToRegister.setIsActive(false);
         Role userRole = roleRepository.getByName(USER_ROLE);
         userToRegister.setRole(userRole);
         userRepository.save(userToRegister);
-        String emailContent = emailTemplateCreator.getRegistrationTemplate(guiProperties.getRegistrationUrl());
+        String emailContent = emailTemplateCreator.getRegistrationTemplate(token);
         addMailSendToQueue(registration.getEmail(), registrationSubject, emailContent);
     }
 
@@ -176,14 +174,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void resetPassword(String email) {
-        User userToResetPassword = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
+    public void resetPassword(String token, String newPassword) {
+        User userToResetPassword = userRepository.findByToken(token)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + token));
         String password = PasswordGenerator.generatePassword();
         userToResetPassword.setPassword(passwordEncoder.encode(password));
-        userRepository.save(userToResetPassword);
-        String emailContent = emailTemplateCreator.getResetPasswordTemplate(password);
-        addMailSendToQueue(userToResetPassword.getEmail(), resetPasswordSubject, emailContent);
+       userRepository.save(userToResetPassword);
+
     }
 
     @Override
@@ -195,15 +192,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendNewToken(String email) {
+    public void sendNewRegistrationToken(String email) {
         User userToSetNewToken = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
-        userToSetNewToken.setToken(UUID.randomUUID().toString());
+        String token = UUID.randomUUID().toString();
+        userToSetNewToken.setToken(token);
         userToSetNewToken.setIsActive(false);
         userToSetNewToken.setTokenCreatedAt(new Date());
         userRepository.save(userToSetNewToken);
-        String emailContent = emailTemplateCreator.getRegistrationTemplate(guiProperties.getRegistrationUrl());
+        String emailContent = emailTemplateCreator.getRegistrationTemplate(token);
         addMailSendToQueue(userToSetNewToken.getEmail(), registrationSubject, emailContent);
+    }
+
+    @Override
+    public void sendResetPasswordToken(String email) {
+        User userToResetPassword = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Could not find user with email: " + email));
+        String token = UUID.randomUUID().toString();
+        userToResetPassword.setToken(token);
+        userToResetPassword.setTokenCreatedAt(new Date());
+        userRepository.save(userToResetPassword);
+        String emailContent = emailTemplateCreator .getResetPasswordTemplate(token);
+        addMailSendToQueue(userToResetPassword.getEmail(), resetPasswordSubject, emailContent);
     }
 
     private void addMailSendToQueue(String sendTo, String subject, String content) {

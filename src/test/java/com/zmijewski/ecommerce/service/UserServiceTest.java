@@ -51,8 +51,6 @@ class UserServiceTest {
     @Mock
     EmailTemplateCreator emailTemplateCreator;
     @Mock
-    GuiProperties guiProperties;
-    @Mock
     UserMapper userMapper;
     @Mock
     PasswordEncoder passwordEncoder;
@@ -146,7 +144,6 @@ class UserServiceTest {
         when(roleRepository.getByName(anyString())).thenReturn(new Role());
         when(userRepository.save(any())).thenReturn(new User());
         when(emailTemplateCreator.getRegistrationTemplate(anyString())).thenReturn("test");
-        when(guiProperties.getRegistrationUrl()).thenReturn("http:localhost:4200/registration");
         doNothing().when(rabbitTemplate).convertAndSend(anyString(), any(EmailDTO.class));
         //when
         userService.registerUser(registrationDTO);
@@ -300,23 +297,20 @@ class UserServiceTest {
     @Test
     void shouldResetPassword() {
         //given
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(userRepository.findByToken(anyString())).thenReturn(Optional.of(new User()));
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any())).thenReturn(new User());
-        when(emailTemplateCreator.getResetPasswordTemplate(anyString())).thenReturn("test");
-        doNothing().when(rabbitTemplate).convertAndSend(anyString(), any(EmailDTO.class));
         //when
-        userService.resetPassword("test@test");
+        userService.resetPassword("test", "test");
         //then
         verify(userRepository).save(any());
-        verify(rabbitTemplate).convertAndSend(anyString(), any(EmailDTO.class));
     }
     @Test
     void shouldNotResetPasswordIfUserNotFound() {
         //given
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findByToken(anyString())).thenReturn(Optional.empty());
         //when && then
-        assertThrows(UserNotFoundException.class, () -> userService.resetPassword("test@test"));
+        assertThrows(UserNotFoundException.class, () -> userService.resetPassword("test", "test"));
         verifyNoMoreInteractions(userRepository);
         verifyNoInteractions(rabbitTemplate);
     }
@@ -345,10 +339,9 @@ class UserServiceTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(userRepository.save(any())).thenReturn(new User());
         when(emailTemplateCreator.getRegistrationTemplate(anyString())).thenReturn("test");
-        when(guiProperties.getRegistrationUrl()).thenReturn("http:localhost:4200/registration");
         doNothing().when(rabbitTemplate).convertAndSend(anyString(), any(EmailDTO.class));
         //when
-        userService.sendNewToken("test@test");
+        userService.sendNewRegistrationToken("test@test");
         //then
         verify(userRepository).save(any());
         verify(rabbitTemplate).convertAndSend(anyString(), any(EmailDTO.class));
@@ -358,7 +351,29 @@ class UserServiceTest {
         //given
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         //when && then
-        assertThrows(UserNotFoundException.class, () -> userService.sendNewToken("test@test"));
+        assertThrows(UserNotFoundException.class, () -> userService.sendNewRegistrationToken("test@test"));
+        verifyNoMoreInteractions(userRepository);
+        verifyNoInteractions(rabbitTemplate);
+    }
+    @Test
+    void shouldSendResetPasswordToken() {
+        //given
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(emailTemplateCreator.getResetPasswordTemplate(anyString())).thenReturn("test");
+        doNothing().when(rabbitTemplate).convertAndSend(anyString(), any(EmailDTO.class));
+        when(userRepository.save(any())).thenReturn(new User());
+        //when
+        userService.sendResetPasswordToken("test@test");
+        //then
+        verify(userRepository).save(any());
+        verify(rabbitTemplate).convertAndSend(anyString(), any(EmailDTO.class));
+    }
+    @Test
+    void shouldNotSendResetPasswordTokenIfUserNotFound() {
+        //given
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        //when && then
+        assertThrows(UserNotFoundException.class, () -> userService.sendResetPasswordToken("test@test"));
         verifyNoMoreInteractions(userRepository);
         verifyNoInteractions(rabbitTemplate);
     }
