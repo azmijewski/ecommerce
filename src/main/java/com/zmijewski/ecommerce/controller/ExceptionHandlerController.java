@@ -79,6 +79,21 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         ApiError error = handleException(ex, request, HttpStatus.NOT_FOUND);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+    @ExceptionHandler(CategoryCannotBeRemovedException.class)
+    protected ResponseEntity<ApiError> handleCategoryCannotBeRemoved(CategoryCannotBeRemovedException ex, HttpServletRequest request) {
+        ApiError error = handleException(ex, request, HttpStatus.CONFLICT);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+    @ExceptionHandler(CategoryNameAlreadyExistException.class)
+    protected ResponseEntity<ApiError> handleCategoryNameAlreadyExist(CategoryNameAlreadyExistException ex, HttpServletRequest request) {
+        ApiError error = handleException(ex, request, HttpStatus.CONFLICT);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+    @ExceptionHandler(PaymentNotFoundException.class)
+    protected ResponseEntity<ApiError> handlePaymentNotFound(PaymentNotFoundException ex, HttpServletRequest request) {
+        ApiError error = handleException(ex, request, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 
     private <T extends RuntimeException> ApiError handleException(T ex, HttpServletRequest request, HttpStatus httpStatus) {
         log.error(ex);

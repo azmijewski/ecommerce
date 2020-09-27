@@ -4,8 +4,8 @@ import com.zmijewski.ecommerce.dto.RegistrationDTO;
 import com.zmijewski.ecommerce.dto.UserDTO;
 import com.zmijewski.ecommerce.dto.UserWithAddressesDTO;
 import com.zmijewski.ecommerce.dto.UserWithRoleDTO;
-import com.zmijewski.ecommerce.enums.UserSearchCriteria;
-import com.zmijewski.ecommerce.enums.UserSortType;
+import com.zmijewski.ecommerce.model.enums.UserSearchCriteria;
+import com.zmijewski.ecommerce.model.enums.UserSortType;
 import org.springframework.data.domain.Page;
 
 import java.util.Map;

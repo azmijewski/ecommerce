@@ -3,8 +3,8 @@ package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.ProductDTO;
 import com.zmijewski.ecommerce.dto.ShortProductDTO;
-import com.zmijewski.ecommerce.enums.ProductSearchCriteria;
-import com.zmijewski.ecommerce.enums.ProductSortType;
+import com.zmijewski.ecommerce.model.enums.ProductSearchCriteria;
+import com.zmijewski.ecommerce.model.enums.ProductSortType;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 

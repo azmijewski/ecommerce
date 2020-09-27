@@ -2,8 +2,8 @@ package com.zmijewski.ecommerce.mapper;
 
 import com.zmijewski.ecommerce.dto.ProductDTO;
 import com.zmijewski.ecommerce.dto.ShortProductDTO;
-import com.zmijewski.ecommerce.model.Image;
-import com.zmijewski.ecommerce.model.Product;
+import com.zmijewski.ecommerce.model.entity.Image;
+import com.zmijewski.ecommerce.model.entity.Product;
 import org.mapstruct.*;
 
 import java.util.List;

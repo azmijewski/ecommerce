@@ -1,6 +1,6 @@
 package com.zmijewski.ecommerce.repository;
 
-import com.zmijewski.ecommerce.model.Cart;
+import com.zmijewski.ecommerce.model.entity.Cart;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;

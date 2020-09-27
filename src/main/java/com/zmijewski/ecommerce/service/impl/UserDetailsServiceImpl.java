@@ -1,7 +1,7 @@
 package com.zmijewski.ecommerce.service.impl;
 
-import com.zmijewski.ecommerce.model.Role;
-import com.zmijewski.ecommerce.model.User;
+import com.zmijewski.ecommerce.model.entity.Role;
+import com.zmijewski.ecommerce.model.entity.User;
 import com.zmijewski.ecommerce.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

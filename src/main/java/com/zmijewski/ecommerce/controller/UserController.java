@@ -1,8 +1,8 @@
 package com.zmijewski.ecommerce.controller;
 
 import com.zmijewski.ecommerce.dto.*;
-import com.zmijewski.ecommerce.enums.UserSearchCriteria;
-import com.zmijewski.ecommerce.enums.UserSortType;
+import com.zmijewski.ecommerce.model.enums.UserSearchCriteria;
+import com.zmijewski.ecommerce.model.enums.UserSortType;
 import com.zmijewski.ecommerce.service.UserService;
 import com.zmijewski.ecommerce.util.ResponseUriBuilder;
 import lombok.extern.log4j.Log4j2;

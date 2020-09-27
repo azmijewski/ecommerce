@@ -1,4 +1,4 @@
-package com.zmijewski.ecommerce.model;
+package com.zmijewski.ecommerce.model.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,16 +9,16 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Entity
-public class OrderProduct {
+public class CartProduct {
 
     @EmbeddedId
-    private OrderProductPK id = new OrderProductPK();
+    private CartProductPK id = new CartProductPK();
 
 
-    @MapsId("orderId")
+    @MapsId("cartId")
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     @MapsId("productId")
     @ManyToOne
@@ -31,8 +31,8 @@ public class OrderProduct {
     @NoArgsConstructor
     @Data
     @Embeddable
-    public static class OrderProductPK implements Serializable {
-        private Long orderId;
+    public static class CartProductPK implements Serializable {
+        private Long cartId;
         private Long productId;
     }
 }

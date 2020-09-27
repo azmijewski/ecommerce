@@ -1,9 +1,9 @@
 package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.AuditLogDTO;
-import com.zmijewski.ecommerce.enums.AuditLogSortType;
+import com.zmijewski.ecommerce.model.enums.AuditLogSortType;
 import com.zmijewski.ecommerce.mapper.AuditLogMapper;
-import com.zmijewski.ecommerce.model.AuditLog;
+import com.zmijewski.ecommerce.model.entity.AuditLog;
 import com.zmijewski.ecommerce.repository.AuditLogRepository;
 import com.zmijewski.ecommerce.service.impl.AuditLogServiceImpl;
 import org.junit.jupiter.api.Test;

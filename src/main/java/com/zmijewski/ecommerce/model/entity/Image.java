@@ -1,7 +1,6 @@
-package com.zmijewski.ecommerce.model;
+package com.zmijewski.ecommerce.model.entity;
 
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;

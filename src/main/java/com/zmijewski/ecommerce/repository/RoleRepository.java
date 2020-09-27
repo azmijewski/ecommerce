@@ -1,6 +1,6 @@
 package com.zmijewski.ecommerce.repository;
 
-import com.zmijewski.ecommerce.model.Role;
+import com.zmijewski.ecommerce.model.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

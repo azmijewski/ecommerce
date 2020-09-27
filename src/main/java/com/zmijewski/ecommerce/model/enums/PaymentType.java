@@ -1,4 +1,4 @@
-package com.zmijewski.ecommerce.enums;
+package com.zmijewski.ecommerce.model.enums;
 
 public enum  PaymentType {
     PREPAID, POSTPAID

@@ -1,8 +1,8 @@
 package com.zmijewski.ecommerce.repository;
 
-import com.zmijewski.ecommerce.model.Cart;
-import com.zmijewski.ecommerce.model.CartProduct;
-import com.zmijewski.ecommerce.model.Product;
+import com.zmijewski.ecommerce.model.entity.Cart;
+import com.zmijewski.ecommerce.model.entity.CartProduct;
+import com.zmijewski.ecommerce.model.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

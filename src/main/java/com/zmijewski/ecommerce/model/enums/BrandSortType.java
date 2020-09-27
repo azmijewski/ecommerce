@@ -1,7 +1,7 @@
-package com.zmijewski.ecommerce.enums;
+package com.zmijewski.ecommerce.model.enums;
 
 import lombok.Getter;
-import org.apache.lucene.search.SortField;
+
 @Getter
 public enum BrandSortType {
     ID_ASC("id", "asc"),

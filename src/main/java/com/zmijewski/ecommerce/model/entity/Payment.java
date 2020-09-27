@@ -1,7 +1,6 @@
-package com.zmijewski.ecommerce.model;
+package com.zmijewski.ecommerce.model.entity;
 
-import com.zmijewski.ecommerce.enums.PaymentType;
-import lombok.AllArgsConstructor;
+import com.zmijewski.ecommerce.model.enums.PaymentType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

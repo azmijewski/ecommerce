@@ -1,7 +1,7 @@
 package com.zmijewski.ecommerce.mapper;
 
 import com.zmijewski.ecommerce.dto.BrandDTO;
-import com.zmijewski.ecommerce.model.Brand;
+import com.zmijewski.ecommerce.model.entity.Brand;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

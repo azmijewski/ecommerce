@@ -4,7 +4,7 @@ import com.zmijewski.ecommerce.dto.RegistrationDTO;
 import com.zmijewski.ecommerce.dto.UserDTO;
 import com.zmijewski.ecommerce.dto.UserWithAddressesDTO;
 import com.zmijewski.ecommerce.dto.UserWithRoleDTO;
-import com.zmijewski.ecommerce.model.User;
+import com.zmijewski.ecommerce.model.entity.User;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = AddressMapper.class)

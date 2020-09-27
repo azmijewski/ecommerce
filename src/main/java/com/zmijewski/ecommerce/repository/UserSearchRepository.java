@@ -1,9 +1,7 @@
 package com.zmijewski.ecommerce.repository;
 
-import com.zmijewski.ecommerce.enums.ProductSortType;
-import com.zmijewski.ecommerce.enums.UserSortType;
-import com.zmijewski.ecommerce.model.Product;
-import com.zmijewski.ecommerce.model.User;
+import com.zmijewski.ecommerce.model.enums.UserSortType;
+import com.zmijewski.ecommerce.model.entity.User;
 import org.springframework.data.domain.Page;
 
 public interface UserSearchRepository {

@@ -1,6 +1,6 @@
 package com.zmijewski.ecommerce.repository;
 
-import com.zmijewski.ecommerce.model.Order;
+import com.zmijewski.ecommerce.model.entity.Order;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 

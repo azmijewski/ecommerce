@@ -1,9 +1,7 @@
 package com.zmijewski.ecommerce.mapper;
 
 import com.zmijewski.ecommerce.dto.AddressDTO;
-import com.zmijewski.ecommerce.model.Address;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.zmijewski.ecommerce.model.entity.Address;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

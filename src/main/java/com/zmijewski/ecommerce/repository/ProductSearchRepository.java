@@ -1,9 +1,8 @@
 package com.zmijewski.ecommerce.repository;
 
-import com.zmijewski.ecommerce.enums.ProductSortType;
-import com.zmijewski.ecommerce.model.Product;
+import com.zmijewski.ecommerce.model.enums.ProductSortType;
+import com.zmijewski.ecommerce.model.entity.Product;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface ProductSearchRepository {
 

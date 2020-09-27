@@ -1,6 +1,7 @@
-package com.zmijewski.ecommerce.model;
+package com.zmijewski.ecommerce.model.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.search.annotations.Field;
@@ -11,18 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 @Entity
 @Indexed
-public class Category {
+public class Brand {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category-generator")
-    @SequenceGenerator(name = "category-generator", sequenceName = "next_category_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand-generator")
+    @SequenceGenerator(name = "brand-generator", sequenceName = "next_brand_id")
     private Long id;
     @Field
     private String name;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "brand")
     private List<Product> products = new ArrayList<>();
-
 }

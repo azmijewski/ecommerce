@@ -1,7 +1,7 @@
 package com.zmijewski.ecommerce.controller;
 
 import com.zmijewski.ecommerce.dto.BrandDTO;
-import com.zmijewski.ecommerce.enums.BrandSortType;
+import com.zmijewski.ecommerce.model.enums.BrandSortType;
 import com.zmijewski.ecommerce.service.BrandService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;

@@ -12,4 +12,6 @@ public class AuditLogDTO implements Serializable {
     private String message;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date createdAt;
+    private String type;
+
 }

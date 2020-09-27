@@ -1,15 +1,14 @@
 package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.*;
-import com.zmijewski.ecommerce.enums.UserSearchCriteria;
-import com.zmijewski.ecommerce.enums.UserSortType;
+import com.zmijewski.ecommerce.model.enums.UserSearchCriteria;
+import com.zmijewski.ecommerce.model.enums.UserSortType;
 import com.zmijewski.ecommerce.exception.EmailAlreadyExistException;
 import com.zmijewski.ecommerce.exception.RoleNotFoundException;
 import com.zmijewski.ecommerce.exception.UserNotFoundException;
 import com.zmijewski.ecommerce.mapper.UserMapper;
-import com.zmijewski.ecommerce.model.Role;
-import com.zmijewski.ecommerce.model.User;
-import com.zmijewski.ecommerce.properties.GuiProperties;
+import com.zmijewski.ecommerce.model.entity.Role;
+import com.zmijewski.ecommerce.model.entity.User;
 import com.zmijewski.ecommerce.repository.RoleRepository;
 import com.zmijewski.ecommerce.repository.UserRepository;
 import com.zmijewski.ecommerce.repository.UserSearchRepository;
@@ -117,7 +116,7 @@ class UserServiceTest {
     @Test
     void shouldFindUserWithAddressesByEmailIfExist() {
         //given
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+        when(userRepository.findWithAddressesByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(userMapper.mapToUserWithAddressesDTO(any())).thenReturn(new UserWithAddressesDTO());
         //when
         UserWithAddressesDTO result = userService.findUserWithAddresses("test@test");
@@ -127,7 +126,7 @@ class UserServiceTest {
     @Test
     void shouldNotFindUserWithAddressesByEmailIfNotExist() {
         //given
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findWithAddressesByEmail(anyString())).thenReturn(Optional.empty());
         //when && then
         assertThrows(UserNotFoundException.class, () -> userService.findUserWithAddresses("test@test"));
     }

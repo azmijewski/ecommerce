@@ -1,6 +1,6 @@
-package com.zmijewski.ecommerce.model;
+package com.zmijewski.ecommerce.model.entity;
 
-import com.zmijewski.ecommerce.enums.AuditLogType;
+import com.zmijewski.ecommerce.model.enums.AuditLogType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

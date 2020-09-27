@@ -2,9 +2,8 @@ package com.zmijewski.ecommerce.mapper;
 
 import com.zmijewski.ecommerce.dto.CartDTO;
 import com.zmijewski.ecommerce.dto.CartProductDTO;
-import com.zmijewski.ecommerce.dto.ShortProductDTO;
-import com.zmijewski.ecommerce.model.Cart;
-import com.zmijewski.ecommerce.model.CartProduct;
+import com.zmijewski.ecommerce.model.entity.Cart;
+import com.zmijewski.ecommerce.model.entity.CartProduct;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")

@@ -1,7 +1,7 @@
 package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.AuditLogDTO;
-import com.zmijewski.ecommerce.enums.AuditLogSortType;
+import com.zmijewski.ecommerce.model.enums.AuditLogSortType;
 import org.springframework.data.domain.Page;
 
 public interface AuditLogService {

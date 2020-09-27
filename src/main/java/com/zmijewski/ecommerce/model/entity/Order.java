@@ -1,6 +1,6 @@
-package com.zmijewski.ecommerce.model;
+package com.zmijewski.ecommerce.model.entity;
 
-import com.zmijewski.ecommerce.enums.OrderStatus;
+import com.zmijewski.ecommerce.model.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

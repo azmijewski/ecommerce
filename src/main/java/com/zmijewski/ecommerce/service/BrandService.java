@@ -1,7 +1,7 @@
 package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.BrandDTO;
-import com.zmijewski.ecommerce.enums.BrandSortType;
+import com.zmijewski.ecommerce.model.enums.BrandSortType;
 
 import java.util.List;
 

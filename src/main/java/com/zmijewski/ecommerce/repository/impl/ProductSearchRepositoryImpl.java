@@ -1,9 +1,8 @@
 package com.zmijewski.ecommerce.repository.impl;
 
-import com.zmijewski.ecommerce.enums.ProductSortType;
-import com.zmijewski.ecommerce.model.Product;
+import com.zmijewski.ecommerce.model.enums.ProductSortType;
+import com.zmijewski.ecommerce.model.entity.Product;
 import com.zmijewski.ecommerce.repository.ProductSearchRepository;
-import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
 import org.apache.lucene.search.*;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
-import java.util.Arrays;
 import java.util.Objects;
 
 @Repository
