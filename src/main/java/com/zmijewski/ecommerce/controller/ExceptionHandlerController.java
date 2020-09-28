@@ -94,6 +94,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         ApiError error = handleException(ex, request, HttpStatus.NOT_FOUND);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+    @ExceptionHandler(ShippingNotFoundException.class)
+    protected ResponseEntity<ApiError> handleShippingNotFound(ShippingNotFoundException ex, HttpServletRequest request) {
+        ApiError error = handleException(ex, request, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 
     private <T extends RuntimeException> ApiError handleException(T ex, HttpServletRequest request, HttpStatus httpStatus) {
         log.error(ex);
