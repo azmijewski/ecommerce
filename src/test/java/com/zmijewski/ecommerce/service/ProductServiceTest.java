@@ -224,5 +224,24 @@ class ProductServiceTest {
         //when && then
         assertThrows(NotEnoughProductException.class, () -> productService.decreaseProductQuantity(10, 1L));
     }
+    @Test
+    void shouldAddImageToProduct() {
+        //given
+        MultipartFile file = new MockMultipartFile("test", "test".getBytes());
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(new Product()));
+        when(imageRepository.save(any())).thenReturn(new Image());
+        //when
+        productService.addImageToProduct(1L, file);
+        //then
+        verify(imageRepository).save(any());
+    }
+    @Test
+    void shouldNotAddImageToProductIfProductNotFound() {
+        //given
+        MultipartFile file = new MockMultipartFile("test", "test".getBytes());
+        when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
+        //when && then
+        assertThrows(ProductNotFoundException.class, () -> productService.addImageToProduct(1L, file));
+    }
 
 }

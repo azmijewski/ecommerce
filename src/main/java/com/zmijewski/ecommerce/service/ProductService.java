@@ -20,4 +20,5 @@ public interface ProductService {
     void deleteProduct(Long productId);
     void increaseProductQuantity(Integer quantityToIncrease, Long productId);
     void decreaseProductQuantity(Integer quantityToDecrease, Long productId);
+    void addImageToProduct(Long productId, MultipartFile image);
 }

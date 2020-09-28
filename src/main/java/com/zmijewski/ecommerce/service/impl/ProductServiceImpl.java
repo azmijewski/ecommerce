@@ -139,4 +139,20 @@ public class ProductServiceImpl implements ProductService {
         }
 
     }
+
+    @Override
+    public void addImageToProduct(Long productId, MultipartFile image) {
+        Product productToAddImage = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Could not find product with id: " + productId));
+        Image imageToAdd = new Image();
+        try {
+            imageToAdd.setPhoto(image.getBytes());
+        } catch (IOException e) {
+            log.error(e);
+            throw new RuntimeException(e.getMessage());
+        }
+        imageToAdd.setName(image.getOriginalFilename());
+        imageToAdd.setProduct(productToAddImage);
+        imageRepository.save(imageToAdd);
+    }
 }

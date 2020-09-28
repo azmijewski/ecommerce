@@ -105,5 +105,13 @@ public class ProductController {
         productService.decreaseProductQuantity(quantity, productId);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("products/{productId}/images")
+    @Secured({"ROLE_ADMIN"})
+    public ResponseEntity<?> addImageTOPhoto(@PathVariable(name = "productId") Long productId,
+                                             @RequestParam(name = "file") MultipartFile file) {
+        log.info("Trying to add new image to product with id: {}", productId);
+        productService.addImageToProduct(productId, file);
+        return ResponseEntity.noContent().build();
+    }
 
 }
