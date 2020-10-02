@@ -4,12 +4,13 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import com.zmijewski.ecommerce.exception.PaymentExecutionException;
+import com.zmijewski.ecommerce.model.enums.GlobalParameterName;
 import com.zmijewski.ecommerce.payment.model.CompleteOrderRequest;
 import com.zmijewski.ecommerce.payment.model.CompleteOrderResponse;
 import com.zmijewski.ecommerce.payment.model.CreateOrderRequest;
 import com.zmijewski.ecommerce.payment.model.CreateOrderResponse;
-import com.zmijewski.ecommerce.properties.GuiProperties;
 import com.zmijewski.ecommerce.properties.PayPalProperties;
+import com.zmijewski.ecommerce.repository.GlobalParameterRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
@@ -26,13 +27,13 @@ public class PayPalPaymentClient implements OnlinePaymentClient {
     private static final String APPROVAL_URL = "approval_url";
 
     private final PayPalProperties payPalProperties;
-    private final GuiProperties guiProperties;
     private APIContext apiContext;
+    private final GlobalParameterRepository globalParameterRepository;
 
 
-    public PayPalPaymentClient(PayPalProperties payPalProperties, GuiProperties guiProperties) {
+    public PayPalPaymentClient(PayPalProperties payPalProperties, GlobalParameterRepository globalParameterRepository) {
         this.payPalProperties = payPalProperties;
-        this.guiProperties = guiProperties;
+        this.globalParameterRepository = globalParameterRepository;
     }
     @PostConstruct
     protected void createApiContext() {
@@ -53,8 +54,8 @@ public class PayPalPaymentClient implements OnlinePaymentClient {
         Payer payer = createPayer(createOrderRequest);
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setReturnUrl(guiProperties.getRedirectOnlinePaymentUrl());
-        redirectUrls.setCancelUrl(guiProperties.getRedirectCancelOnlinePaymentUrl());
+        redirectUrls.setReturnUrl(globalParameterRepository.getValueAsString(GlobalParameterName.REDIRECT_ONLINE_PAYMENT_URL));
+        redirectUrls.setCancelUrl(globalParameterRepository.getValueAsString(GlobalParameterName.REDIRECT_CANCEL_ONLINE_PAYMENT_URL));
 
         Payment payment = new Payment();
         payment.setIntent(PAYMENT_INTENT);

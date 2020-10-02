@@ -48,7 +48,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDTO getById(Long cartId) {
-        return cartRepository.findById(cartId)
+        return cartRepository.findWithProductsById(cartId)
                 .map(cartMapper::mapToDTO)
                 .orElseThrow(() -> new CartNotFoundException("Could not find cart with id: " + cartId));
     }

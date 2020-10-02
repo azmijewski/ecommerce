@@ -47,7 +47,7 @@ class CartServiceTest {
     @Test
     void shouldGetByIdIfExist() {
         //given
-        when(cartRepository.findById(anyLong())).thenReturn(Optional.of(new Cart()));
+        when(cartRepository.findWithProductsById(anyLong())).thenReturn(Optional.of(new Cart()));
         when(cartMapper.mapToDTO(any())).thenReturn(new CartDTO());
         //when
         CartDTO result = cartService.getById(1L);
@@ -58,7 +58,7 @@ class CartServiceTest {
     @Test
     void shouldNotGetByIdIfNotExist() {
         //given
-        when(cartRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(cartRepository.findWithProductsById(anyLong())).thenReturn(Optional.empty());
         //when && then
         assertThrows(CartNotFoundException.class, () -> cartService.getById(1L));
     }

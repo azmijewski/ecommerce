@@ -99,6 +99,16 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         ApiError error = handleException(ex, request, HttpStatus.NOT_FOUND);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+    @ExceptionHandler(PaymentTypeNotEqualsException.class)
+    protected ResponseEntity<ApiError> handlePaymentTypeNotEquals(PaymentTypeNotEqualsException ex, HttpServletRequest request) {
+        ApiError error = handleException(ex, request, HttpStatus.CONFLICT);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+    @ExceptionHandler(OrderNotFoundException.class)
+    protected ResponseEntity<ApiError> handleOrderNotFound(OrderNotFoundException ex, HttpServletRequest request) {
+        ApiError error = handleException(ex, request, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 
     private <T extends RuntimeException> ApiError handleException(T ex, HttpServletRequest request, HttpStatus httpStatus) {
         log.error(ex);

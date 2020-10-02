@@ -38,6 +38,8 @@ public class Order {
     @Field
     private String token;
 
+    private String paymentToken;
+
     @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
 
@@ -53,7 +55,7 @@ public class Order {
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", orphanRemoval = true)
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
 

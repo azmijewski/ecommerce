@@ -12,8 +12,11 @@ import java.util.Optional;
 
 @Repository
 public interface CartRepository extends PagingAndSortingRepository<Cart, Long> {
-    @Query("select c from Cart c where c.user.email = :email")
+    @Query("select c from Cart c join c.cartProducts cp join cp.product p where c.user.email = :email")
     Optional<Cart> findByUserMail(@Param("email") String mail);
+
+    @Query("select c from Cart c join c.cartProducts cp join cp.product p where c.id = :id")
+    Optional<Cart> findWithProductsById(@Param("id") Long id);
 
     @Modifying
     @Query("update Cart c set c.totalPrice = c.totalPrice + :price where c.id = :id")
