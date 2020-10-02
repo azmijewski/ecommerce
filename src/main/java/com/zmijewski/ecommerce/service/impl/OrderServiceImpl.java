@@ -139,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
         CreatedOrderDTO createdOrderDTO = orderMapper.mapToCreatedOrderDTO(savedOrder);
         createdOrderDTO.setPayNow(payNow);
         createdOrderDTO.setPaymentLink(paymentUri);
-        String template = templateCreator.getOrderCreatedTemplate(createdOrderDTO.getId());
+        String template = templateCreator.getOrderCreatedTemplate(savedOrder.getId());
         addMailSendToQueue(user.getEmail(), orderCreatedSubject, template);
         return createdOrderDTO;
     }

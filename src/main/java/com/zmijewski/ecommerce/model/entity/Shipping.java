@@ -1,14 +1,19 @@
 package com.zmijewski.ecommerce.model.entity;
 
 import com.zmijewski.ecommerce.model.enums.PaymentType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.annotation.security.DenyAll;
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 @Entity
 public class Shipping {
     @Id

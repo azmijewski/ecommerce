@@ -1,13 +1,17 @@
 package com.zmijewski.ecommerce.model.entity;
 
 import com.zmijewski.ecommerce.model.enums.PaymentType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 @Entity
 public class Payment {
     @Id

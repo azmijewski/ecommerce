@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -155,5 +156,13 @@ public class CartServiceImpl implements CartService {
         }
         cartToAssignToUser.setUser(userToBeAssigned);
         cartRepository.save(cartToAssignToUser);
+    }
+
+    @Override
+    public void deleteOldCarts() {
+        cartRepository.getOldCarts(new Date()).forEach(cartId -> {
+            log.info("Deleting cart with id: {}", cartId);
+            deleteCart(cartId);
+        });
     }
 }

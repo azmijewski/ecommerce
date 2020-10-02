@@ -12,5 +12,6 @@ public interface CartService {
     void clearCart(Long cartId);
     void deleteCart(Long cartId);
     void assignCartToUser(String email, Long cartId);
+    void deleteOldCarts();
 
 }
