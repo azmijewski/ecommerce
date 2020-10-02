@@ -150,12 +150,12 @@ public class OrderServiceImpl implements OrderService {
         Order orderToChangeStatus = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Could not find order with id:" + orderId));
         orderToChangeStatus.setOrderStatus(orderStatus);
-        if(OrderStatus.CANCELLED.equals(orderStatus)) {
+        if(OrderStatus.CANCELLED.equals(orderStatus) || OrderStatus.RETURNED.equals(orderStatus)) {
             cleanOrderProducts(orderToChangeStatus);
         }
         orderRepository.save(orderToChangeStatus);
         String template = templateCreator.getOrderStatusChangedTemplate(orderId, orderStatus);
-        addMailSendToQueue(orderToChangeStatus.getUser().getEmail(), orderCreatedSubject, template);
+        addMailSendToQueue(orderToChangeStatus.getUser().getEmail(), orderStatusChangedSubject, template);
     }
 
 

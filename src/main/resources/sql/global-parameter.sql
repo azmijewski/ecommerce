@@ -1,0 +1,12 @@
+insert into global_paramter value (1, REGISTRATION_URL, 'http://localhost:4200/registration/');
+insert into global_paramter value (2, REDIRECT_ONLINE_PAYMENT_URL, 'http://localhost:4200/registration/');
+insert into global_paramter value (3, REDIRECT_CANCEL_ONLINE_PAYMENT_URL, 'http://localhost:4200/canceling/');
+insert into global_paramter value (4, CHECK_ORDER_URL, 'http://localhost:4200/order/');
+insert into global_paramter value (5, ORDER_STATUS_CREATED_MESSAGE, 'Utworzone');
+insert into global_paramter value (6, ORDER_STATUS_PAYED_MESSAGE, 'Opłacone');
+insert into global_paramter value (7, ORDER_STATUS_IN_DELIVERY_MESSAGE, 'Dostawa');
+insert into global_paramter value (8, ORDER_STATUS_DELIVERED_MESSAGE, 'Dostarczone');
+insert into global_paramter value (9, ORDER_STATUS_PROCESSING_MESSAGE, 'W przygotowaniu');
+insert into global_paramter value (10, ORDER_STATUS_WAITING_FOR_PAYMENT_MESSAGE, 'Oczekiwanie na zapłatę');
+insert into global_paramter value (11, ORDER_STATUS_CANCELLED_MESSAGE, 'Anulowane');
+insert into global_paramter value (12, ORDER_STATUS_RETURNED_MESSAGE, 'Zwrócone');
