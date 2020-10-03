@@ -1,7 +1,7 @@
 package com.zmijewski.ecommerce.repository.impl;
 
-import com.zmijewski.ecommerce.model.enums.UserSortType;
 import com.zmijewski.ecommerce.model.entity.User;
+import com.zmijewski.ecommerce.model.enums.UserSortType;
 import com.zmijewski.ecommerce.repository.UserSearchRepository;
 import org.apache.lucene.search.*;
 import org.hibernate.search.jpa.FullTextEntityManager;

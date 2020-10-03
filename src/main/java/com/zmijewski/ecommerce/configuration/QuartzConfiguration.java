@@ -1,7 +1,6 @@
 package com.zmijewski.ecommerce.configuration;
 
 import lombok.extern.log4j.Log4j2;
-import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

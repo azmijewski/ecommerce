@@ -1,10 +1,10 @@
 package com.zmijewski.ecommerce.service.impl;
 
 import com.zmijewski.ecommerce.dto.AuditLogDTO;
-import com.zmijewski.ecommerce.model.enums.AuditLogSortType;
-import com.zmijewski.ecommerce.model.enums.AuditLogType;
 import com.zmijewski.ecommerce.mapper.AuditLogMapper;
 import com.zmijewski.ecommerce.model.entity.AuditLog;
+import com.zmijewski.ecommerce.model.enums.AuditLogSortType;
+import com.zmijewski.ecommerce.model.enums.AuditLogType;
 import com.zmijewski.ecommerce.repository.AuditLogRepository;
 import com.zmijewski.ecommerce.service.AuditLogService;
 import org.springframework.data.domain.Page;

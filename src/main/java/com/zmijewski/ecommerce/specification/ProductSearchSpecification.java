@@ -1,7 +1,7 @@
 package com.zmijewski.ecommerce.specification;
 
-import com.zmijewski.ecommerce.model.enums.ProductSearchCriteria;
 import com.zmijewski.ecommerce.model.entity.Product;
+import com.zmijewski.ecommerce.model.enums.ProductSearchCriteria;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;

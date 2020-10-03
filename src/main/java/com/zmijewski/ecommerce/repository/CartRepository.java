@@ -3,7 +3,6 @@ package com.zmijewski.ecommerce.repository;
 import com.zmijewski.ecommerce.model.entity.Cart;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

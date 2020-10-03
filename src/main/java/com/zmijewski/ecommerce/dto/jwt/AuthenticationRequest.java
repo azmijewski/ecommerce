@@ -1,6 +1,5 @@
 package com.zmijewski.ecommerce.dto.jwt;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -4,7 +4,9 @@ import com.zmijewski.ecommerce.dto.CartDTO;
 import com.zmijewski.ecommerce.dto.CartProductDTO;
 import com.zmijewski.ecommerce.model.entity.Cart;
 import com.zmijewski.ecommerce.model.entity.CartProduct;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface CartMapper {

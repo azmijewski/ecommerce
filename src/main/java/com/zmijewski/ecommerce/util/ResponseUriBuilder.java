@@ -1,6 +1,5 @@
 package com.zmijewski.ecommerce.util;
 
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

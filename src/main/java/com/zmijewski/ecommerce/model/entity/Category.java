@@ -1,8 +1,5 @@
 package com.zmijewski.ecommerce.model.entity;
 
-import com.zmijewski.ecommerce.listeners.AuditListener;
-import com.zmijewski.ecommerce.model.Auditable;
-import com.zmijewski.ecommerce.model.enums.AuditObjectType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,9 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
-@Indexed@EntityListeners({AuditListener.class})
+@Indexed
 @ToString(exclude = {"products"})
-public class Category implements Auditable {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category-generator")
     @SequenceGenerator(name = "category-generator", sequenceName = "next_category_id")
@@ -30,9 +27,4 @@ public class Category implements Auditable {
     @OneToMany(mappedBy = "category")
     private List<Product> products = new ArrayList<>();
 
-    @Override
-    @Transient
-    public AuditObjectType getObjectType() {
-        return AuditObjectType.CATEGORY;
-    }
 }

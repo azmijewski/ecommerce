@@ -1,8 +1,5 @@
 package com.zmijewski.ecommerce.model.entity;
 
-import com.zmijewski.ecommerce.listeners.AuditListener;
-import com.zmijewski.ecommerce.model.Auditable;
-import com.zmijewski.ecommerce.model.enums.AuditObjectType;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.search.annotations.Field;
@@ -27,8 +24,7 @@ import java.util.List;
         })
 })
 @ToString(exclude = {"cart", "addresses", "orders", "role"})
-@EntityListeners({AuditListener.class})
-public class User implements Auditable {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user-generator")
     @SequenceGenerator(name = "user-generator", sequenceName = "next_user_id")
@@ -62,9 +58,4 @@ public class User implements Auditable {
     @IndexedEmbedded
     private List<Order> orders = new ArrayList<>();
 
-    @Override
-    @Transient
-    public AuditObjectType getObjectType() {
-        return AuditObjectType.USER;
-    }
 }

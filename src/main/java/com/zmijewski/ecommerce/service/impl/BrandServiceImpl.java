@@ -1,10 +1,10 @@
 package com.zmijewski.ecommerce.service.impl;
 
 import com.zmijewski.ecommerce.dto.BrandDTO;
-import com.zmijewski.ecommerce.model.enums.BrandSortType;
 import com.zmijewski.ecommerce.exception.BrandNotFoundException;
 import com.zmijewski.ecommerce.mapper.BrandMapper;
 import com.zmijewski.ecommerce.model.entity.Brand;
+import com.zmijewski.ecommerce.model.enums.BrandSortType;
 import com.zmijewski.ecommerce.repository.BrandRepository;
 import com.zmijewski.ecommerce.service.BrandService;
 import org.springframework.data.domain.Sort;

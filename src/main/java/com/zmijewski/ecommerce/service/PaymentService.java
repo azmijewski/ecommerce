@@ -1,7 +1,6 @@
 package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.PaymentDTO;
-import com.zmijewski.ecommerce.model.entity.Payment;
 import com.zmijewski.ecommerce.model.enums.PaymentType;
 
 import java.util.List;

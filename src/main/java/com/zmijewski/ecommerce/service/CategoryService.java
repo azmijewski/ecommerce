@@ -1,7 +1,6 @@
 package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.CategoryDTO;
-import com.zmijewski.ecommerce.model.entity.Category;
 
 import java.util.List;
 

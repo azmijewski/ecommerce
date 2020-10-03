@@ -6,7 +6,6 @@ import com.zmijewski.ecommerce.dto.ShortOrderDTO;
 import com.zmijewski.ecommerce.model.entity.Order;
 import com.zmijewski.ecommerce.model.entity.OrderProduct;
 import com.zmijewski.ecommerce.model.entity.Product;
-import com.zmijewski.ecommerce.payment.model.CreateOrderRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

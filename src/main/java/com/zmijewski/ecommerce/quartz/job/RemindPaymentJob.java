@@ -1,8 +1,6 @@
 package com.zmijewski.ecommerce.quartz.job;
 
 import com.zmijewski.ecommerce.service.OrderService;
-import com.zmijewski.ecommerce.util.CustomMailSender;
-import com.zmijewski.ecommerce.util.EmailTemplateCreator;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

@@ -1,14 +1,14 @@
 package com.zmijewski.ecommerce.service.impl;
 
 import com.zmijewski.ecommerce.dto.*;
-import com.zmijewski.ecommerce.model.enums.UserSearchCriteria;
-import com.zmijewski.ecommerce.model.enums.UserSortType;
 import com.zmijewski.ecommerce.exception.EmailAlreadyExistException;
 import com.zmijewski.ecommerce.exception.RoleNotFoundException;
 import com.zmijewski.ecommerce.exception.UserNotFoundException;
 import com.zmijewski.ecommerce.mapper.UserMapper;
 import com.zmijewski.ecommerce.model.entity.Role;
 import com.zmijewski.ecommerce.model.entity.User;
+import com.zmijewski.ecommerce.model.enums.UserSearchCriteria;
+import com.zmijewski.ecommerce.model.enums.UserSortType;
 import com.zmijewski.ecommerce.repository.RoleRepository;
 import com.zmijewski.ecommerce.repository.UserRepository;
 import com.zmijewski.ecommerce.repository.UserSearchRepository;
