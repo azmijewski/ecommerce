@@ -16,8 +16,8 @@ import java.util.Date;
 @Configuration
 public class JobSubmit {
 
-    private static final String EVERY_DAY_AT_1_AM = "0 1 * * * *";
-    private static final String EVERY_DAY_AT_12_AM = "0 12 * * * *";
+    private static final String EVERY_DAY_AT_1_AM = "0 0 0 ? * * *";
+    private static final String EVERY_DAY_AT_12_AM = "0 0 12 ? * * *";
     private static final String EVERY_5_MIN = "0 0/5 * 1/1 * ? *";
 
     @Bean(name = "deleteCartJobDetail")

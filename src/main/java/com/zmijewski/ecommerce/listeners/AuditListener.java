@@ -1,6 +1,8 @@
 package com.zmijewski.ecommerce.listeners;
 
 import com.zmijewski.ecommerce.model.Auditable;
+import com.zmijewski.ecommerce.model.enums.GlobalParameterName;
+import com.zmijewski.ecommerce.repository.GlobalParameterRepository;
 import com.zmijewski.ecommerce.service.AuditLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,12 +16,16 @@ public class AuditListener {
 
     @Autowired
     private AuditLogService auditLogService;
+    @Autowired
+    private GlobalParameterRepository globalParameterRepository;
 
     @PostPersist
     public void addPersistAuditLog(Object object) {
         if (object instanceof Auditable) {
             Auditable auditable = (Auditable) object;
-            auditLogService.createInfoAuditLog(auditable.getInsertMessage() + auditable.toString());
+            GlobalParameterName parameterName = auditable.getObjectType().getGlobalParameterPersistMessage();
+            String message = globalParameterRepository.getValueAsString(parameterName);
+            auditLogService.createInfoAuditLog(message + auditable.toString());
         }
     }
 
@@ -27,7 +33,9 @@ public class AuditListener {
     public void addUpdateAuditLog(Object object) {
         if (object instanceof Auditable) {
             Auditable auditable = (Auditable) object;
-            auditLogService.createInfoAuditLog(auditable.getUpdateMessage() + auditable.toString());
+            GlobalParameterName parameterName = auditable.getObjectType().getGlobalParameterUpdateMessage();
+            String message = globalParameterRepository.getValueAsString(parameterName);
+            auditLogService.createInfoAuditLog(message + auditable.toString());
         }
     }
 
@@ -35,7 +43,9 @@ public class AuditListener {
     public void addDeleteAuditLog(Object object) {
         if (object instanceof Auditable) {
             Auditable auditable = (Auditable) object;
-            auditLogService.createInfoAuditLog(auditable.getDeleteMessage() + auditable.toString());
+            GlobalParameterName parameterName = auditable.getObjectType().getGlobalParameterDeleteMessage();
+            String message = globalParameterRepository.getValueAsString(parameterName);
+            auditLogService.createInfoAuditLog(message + auditable.toString());
         }
     }
 

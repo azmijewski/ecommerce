@@ -59,8 +59,7 @@ public class EmailTemplateCreator {
     }
     public String getOrderStatusChangedTemplate(Long orderId, OrderStatus orderStatus) {
         Context context = new Context();
-        GlobalParameterName parameterForStatus = GlobalParameterName.getByOrderStatus(orderStatus);
-        String status = globalParameterRepository.getValueAsString(parameterForStatus);
+        String status = globalParameterRepository.getValueAsString(orderStatus.getGlobalParameterName());
         context.setVariable(ID, orderId);
         context.setVariable(STATUS, status);
         return templateEngine.process(ORDER_STATUS_CHANGED_TEMPLATE, context);

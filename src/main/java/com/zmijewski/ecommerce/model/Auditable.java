@@ -1,7 +1,7 @@
 package com.zmijewski.ecommerce.model;
 
+import com.zmijewski.ecommerce.model.enums.AuditObjectType;
+
 public interface Auditable {
-    String getInsertMessage();
-    String getUpdateMessage();
-    String getDeleteMessage();
+   AuditObjectType getObjectType();
 }

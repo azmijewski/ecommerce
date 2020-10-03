@@ -1,5 +1,8 @@
 package com.zmijewski.ecommerce.model.entity;
 
+import com.zmijewski.ecommerce.listeners.AuditListener;
+import com.zmijewski.ecommerce.model.Auditable;
+import com.zmijewski.ecommerce.model.enums.AuditObjectType;
 import com.zmijewski.ecommerce.model.enums.PaymentType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +18,8 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @Entity
-public class Shipping {
+@EntityListeners({AuditListener.class})
+public class Shipping implements Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "shipping-generator")
@@ -27,4 +31,8 @@ public class Shipping {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
+    @Override
+    public AuditObjectType getObjectType() {
+        return AuditObjectType.SHIPPING;
+    }
 }

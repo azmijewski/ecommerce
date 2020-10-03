@@ -1,9 +1,9 @@
 package com.zmijewski.ecommerce.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.zmijewski.ecommerce.listeners.AuditListener;
+import com.zmijewski.ecommerce.model.Auditable;
+import com.zmijewski.ecommerce.model.enums.AuditObjectType;
+import lombok.*;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -20,7 +20,9 @@ import java.util.Map;
 @Builder
 @Entity
 @Indexed
-public class Product {
+@EntityListeners({AuditListener.class})
+@ToString(exclude = {"brand", "category", "cartProducts", "orderProducts", "images"})
+public class Product implements Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "product-generator")
@@ -61,4 +63,10 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<Image> images = new ArrayList<>();
+
+    @Override
+    @Transient
+    public AuditObjectType getObjectType() {
+        return AuditObjectType.PRODUCT;
+    }
 }
