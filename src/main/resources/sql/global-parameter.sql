@@ -10,3 +10,4 @@ insert into global_paramter value (9, ORDER_STATUS_PROCESSING_MESSAGE, 'W przygo
 insert into global_paramter value (10, ORDER_STATUS_WAITING_FOR_PAYMENT_MESSAGE, 'Oczekiwanie na zapłatę');
 insert into global_paramter value (11, ORDER_STATUS_CANCELLED_MESSAGE, 'Anulowane');
 insert into global_paramter value (12, ORDER_STATUS_RETURNED_MESSAGE, 'Zwrócone');
+insert into global_paramter value (13, INFORM_USER_ORDER_EXPIRE_IN_DAYS '7');

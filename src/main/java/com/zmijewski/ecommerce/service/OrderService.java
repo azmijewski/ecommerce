@@ -17,4 +17,5 @@ public interface OrderService {
     void changeOrderStatus(Long orderId, OrderStatus orderStatus);
     String getPaymentLink(Long orderId);
     void executePayment(String paymentId, String payerId);
+    void cancelOrdersWaitingForExpire();
 }

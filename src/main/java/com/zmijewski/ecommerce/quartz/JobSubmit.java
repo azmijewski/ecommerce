@@ -49,7 +49,7 @@ public class JobSubmit {
     public CronTriggerFactoryBean cancelOrderJobTrigger(@Qualifier("cancelOrderJobDetail") JobDetail jobDetail) {
         CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
         cronTriggerFactoryBean.setJobDetail(jobDetail);
-        cronTriggerFactoryBean.setCronExpression(EVERY_DAY_AT_1_AM);
+        cronTriggerFactoryBean.setCronExpression(EVERY_5_MIN);
         cronTriggerFactoryBean.setStartTime(new Date());
         cronTriggerFactoryBean.setStartDelay(0L);
         cronTriggerFactoryBean.setName("Canceling old orders trigger");

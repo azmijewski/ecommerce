@@ -16,6 +16,7 @@ import com.zmijewski.ecommerce.payment.model.CreateOrderResponse;
 import com.zmijewski.ecommerce.repository.*;
 import com.zmijewski.ecommerce.service.OrderService;
 import com.zmijewski.ecommerce.util.EmailTemplateCreator;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -27,10 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
 @PropertySource("classpath:subject.properties")
+@Log4j2
 public class OrderServiceImpl implements OrderService {
 
     private static final String EMAIL_QUEUE = "emailQueue";
@@ -189,6 +192,14 @@ public class OrderServiceImpl implements OrderService {
         orderToExecutePayment.setPaymentToken(null);
         orderToExecutePayment.setOrderStatus(OrderStatus.PAYED);
         orderRepository.save(orderToExecutePayment);
+    }
+
+    @Override
+    public void cancelOrdersWaitingForExpire() {
+        orderRepository.getExpiredOrdersIdWhereWaitingForPayment(new Date()).forEach(orderId -> {
+            log.info("Order with id: {} is going to be cancelled", orderId);
+            changeOrderStatus(orderId, OrderStatus.CANCELLED);
+        });
     }
 
     private void cleanOrderProducts(Order order) {

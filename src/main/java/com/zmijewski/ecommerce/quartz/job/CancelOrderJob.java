@@ -15,6 +15,6 @@ public class CancelOrderJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-
+        orderService.cancelOrdersWaitingForExpire();
     }
 }
