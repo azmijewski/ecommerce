@@ -2,6 +2,7 @@ package com.zmijewski.ecommerce.quartz;
 
 import com.zmijewski.ecommerce.quartz.job.CancelOrderJob;
 import com.zmijewski.ecommerce.quartz.job.DeleteCartJob;
+import com.zmijewski.ecommerce.quartz.job.RemindPaymentJob;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +17,7 @@ import java.util.Date;
 public class JobSubmit {
 
     private static final String EVERY_DAY_AT_1_AM = "0 1 * * * *";
+    private static final String EVERY_DAY_AT_12_AM = "0 12 * * * *";
     private static final String EVERY_5_MIN = "0 0/5 * 1/1 * ? *";
 
     @Bean(name = "deleteCartJobDetail")
@@ -45,14 +47,34 @@ public class JobSubmit {
         detailFactoryBean.setDescription("Canceling old orders job");
         return detailFactoryBean;
     }
-    @Bean(name = "deleteCartTrigger")
+    @Bean(name = "cancelOrderTrigger")
     public CronTriggerFactoryBean cancelOrderJobTrigger(@Qualifier("cancelOrderJobDetail") JobDetail jobDetail) {
         CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
         cronTriggerFactoryBean.setJobDetail(jobDetail);
-        cronTriggerFactoryBean.setCronExpression(EVERY_5_MIN);
+        cronTriggerFactoryBean.setCronExpression(EVERY_DAY_AT_1_AM);
         cronTriggerFactoryBean.setStartTime(new Date());
         cronTriggerFactoryBean.setStartDelay(0L);
         cronTriggerFactoryBean.setName("Canceling old orders trigger");
+        cronTriggerFactoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING);
+        return cronTriggerFactoryBean;
+    }
+    @Bean(name = "paymentReminderJobDetail")
+    public JobDetailFactoryBean paymentReminderJobDetail() {
+        JobDetailFactoryBean detailFactoryBean = new JobDetailFactoryBean();
+        detailFactoryBean.setJobClass(RemindPaymentJob.class);
+        detailFactoryBean.setDurability(true);
+        detailFactoryBean.setDescription("Send payment notification");
+        return detailFactoryBean;
+    }
+
+    @Bean(name = "paymentReminderTrigger")
+    public CronTriggerFactoryBean paymentReminderJobTrigger(@Qualifier("paymentReminderJobDetail") JobDetail jobDetail) {
+        CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
+        cronTriggerFactoryBean.setJobDetail(jobDetail);
+        cronTriggerFactoryBean.setCronExpression(EVERY_DAY_AT_12_AM);
+        cronTriggerFactoryBean.setStartTime(new Date());
+        cronTriggerFactoryBean.setStartDelay(0L);
+        cronTriggerFactoryBean.setName("Send payment notification trigger");
         cronTriggerFactoryBean.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING);
         return cronTriggerFactoryBean;
     }

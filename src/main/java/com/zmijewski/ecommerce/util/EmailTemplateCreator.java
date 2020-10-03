@@ -1,6 +1,5 @@
 package com.zmijewski.ecommerce.util;
 
-import com.zmijewski.ecommerce.model.entity.GlobalParameter;
 import com.zmijewski.ecommerce.model.enums.GlobalParameterName;
 import com.zmijewski.ecommerce.model.enums.OrderStatus;
 import com.zmijewski.ecommerce.repository.GlobalParameterRepository;
@@ -17,12 +16,15 @@ public class EmailTemplateCreator {
     private static final String PASSWORD = "password";
     private static final String ID = "id";
     private static final String STATUS = "status";
+    private static final String DAYS = "days";
+
 
     private static final String REGISTRATION_TEMPLATE = "registration-template";
     private static final String USER_ADDED_TEMPLATE = "user-added-template";
     private static final String RESET_PASSWORD_TEMPLATE = "reset-password-template";
     private static final String ORDER_CREATED_TEMPLATE = "order-created-template";
     private static final String ORDER_STATUS_CHANGED_TEMPLATE = "order-status-changed-template";
+    private static final String ORDER_NEAR_EXPIRED_TEMPLATE = "order-near-expired-template";
 
 
     private final TemplateEngine templateEngine;
@@ -62,5 +64,11 @@ public class EmailTemplateCreator {
         context.setVariable(ID, orderId);
         context.setVariable(STATUS, status);
         return templateEngine.process(ORDER_STATUS_CHANGED_TEMPLATE, context);
+    }
+    public String getOrderNearExpireTemplate(Long orderId, Integer days) {
+        Context context = new Context();
+        context.setVariable(ID, orderId);
+        context.setVariable(DAYS, days);
+        return templateEngine.process(ORDER_NEAR_EXPIRED_TEMPLATE, context);
     }
 }

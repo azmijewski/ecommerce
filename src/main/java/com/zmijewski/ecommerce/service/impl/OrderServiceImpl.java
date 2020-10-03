@@ -7,6 +7,7 @@ import com.zmijewski.ecommerce.dto.ShortOrderDTO;
 import com.zmijewski.ecommerce.exception.*;
 import com.zmijewski.ecommerce.mapper.OrderMapper;
 import com.zmijewski.ecommerce.model.entity.*;
+import com.zmijewski.ecommerce.model.enums.GlobalParameterName;
 import com.zmijewski.ecommerce.model.enums.OrderStatus;
 import com.zmijewski.ecommerce.model.enums.PaymentType;
 import com.zmijewski.ecommerce.payment.OnlinePaymentClient;
@@ -48,8 +49,11 @@ public class OrderServiceImpl implements OrderService {
     private final ProductRepository productRepository;
     private final RabbitTemplate rabbitTemplate;
     private final EmailTemplateCreator templateCreator;
+    private final GlobalParameterRepository globalParameterRepository;
     private final String orderCreatedSubject;
     private final String orderStatusChangedSubject;
+    private final String orderNearExpiredSubject;
+
 
     public OrderServiceImpl(OrderRepository orderRepository,
                             PaymentRepository paymentRepository,
@@ -58,8 +62,10 @@ public class OrderServiceImpl implements OrderService {
                             OrderMapper orderMapper, UserRepository userRepository,
                             OrderProductRepository orderProductRepository, ProductRepository productRepository,
                             RabbitTemplate rabbitTemplate, EmailTemplateCreator templateCreator,
+                            GlobalParameterRepository globalParameterRepository,
                             @Value("${order-created-subject}") String orderCreatedSubject,
-                            @Value("${order-status-changed}")String orderStatusChangedSubject) {
+                            @Value("${order-status-changed}") String orderStatusChangedSubject,
+                            @Value("${order-near-expired}")String orderNearExpiredSubject) {
         this.orderRepository = orderRepository;
         this.paymentRepository = paymentRepository;
         this.shippingRepository = shippingRepository;
@@ -73,6 +79,8 @@ public class OrderServiceImpl implements OrderService {
         this.templateCreator = templateCreator;
         this.orderCreatedSubject = orderCreatedSubject;
         this.orderStatusChangedSubject = orderStatusChangedSubject;
+        this.globalParameterRepository = globalParameterRepository;
+        this.orderNearExpiredSubject = orderNearExpiredSubject;
     }
 
 
@@ -201,6 +209,17 @@ public class OrderServiceImpl implements OrderService {
             changeOrderStatus(orderId, OrderStatus.CANCELLED);
         });
     }
+
+    @Override
+    public void sendRemindPaymentNotifications() {
+        Integer daysToExpire = globalParameterRepository.getValueAsInteger(GlobalParameterName.INFORM_USER_ORDER_EXPIRE_IN_DAYS);
+        orderRepository.getOrdersToExpiredInDays(new Date(), daysToExpire).forEach(order -> {
+            log.info("Send remind notification for order with id: {}", order.getId());
+            String content = templateCreator.getOrderNearExpireTemplate(order.getId(), daysToExpire);
+            addMailSendToQueue(order.getUser().getEmail(), orderNearExpiredSubject, content);
+        });
+    }
+
 
     private void cleanOrderProducts(Order order) {
         for (OrderProduct orderProduct : order.getOrderProducts()) {
