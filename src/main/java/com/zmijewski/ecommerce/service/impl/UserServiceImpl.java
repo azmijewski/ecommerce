@@ -7,13 +7,11 @@ import com.zmijewski.ecommerce.exception.UserNotFoundException;
 import com.zmijewski.ecommerce.mapper.UserMapper;
 import com.zmijewski.ecommerce.model.entity.Role;
 import com.zmijewski.ecommerce.model.entity.User;
-import com.zmijewski.ecommerce.model.enums.UserSearchCriteria;
 import com.zmijewski.ecommerce.model.enums.UserSortType;
 import com.zmijewski.ecommerce.repository.RoleRepository;
 import com.zmijewski.ecommerce.repository.UserRepository;
 import com.zmijewski.ecommerce.repository.UserSearchRepository;
 import com.zmijewski.ecommerce.service.UserService;
-import com.zmijewski.ecommerce.specification.UserSearchSpecification;
 import com.zmijewski.ecommerce.util.EmailTemplateCreator;
 import com.zmijewski.ecommerce.util.PasswordGenerator;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -23,12 +21,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -80,15 +76,6 @@ public class UserServiceImpl implements UserService {
         Sort sort = Sort.by(Sort.Direction.fromString(userSortType.getSortType()), userSortType.getField());
         Pageable pageable = PageRequest.of(page, size, sort);
         return userRepository.findAll(pageable)
-                .map(userMapper::mapToUserWithRoleDTO);
-    }
-
-    @Override
-    public Page<UserWithRoleDTO> findUsersWithRolesByCriteria(int page, int size, UserSortType userSortType, Map<UserSearchCriteria, String> criteriaMap) {
-        Sort sort = Sort.by(Sort.Direction.fromString(userSortType.getSortType()), userSortType.getField());
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Specification<User> specification = new UserSearchSpecification(criteriaMap);
-        return userRepository.findAll(specification, pageable)
                 .map(userMapper::mapToUserWithRoleDTO);
     }
 

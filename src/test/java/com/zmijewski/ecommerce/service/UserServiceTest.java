@@ -1,7 +1,6 @@
 package com.zmijewski.ecommerce.service;
 
 import com.zmijewski.ecommerce.dto.*;
-import com.zmijewski.ecommerce.model.enums.UserSearchCriteria;
 import com.zmijewski.ecommerce.model.enums.UserSortType;
 import com.zmijewski.ecommerce.exception.EmailAlreadyExistException;
 import com.zmijewski.ecommerce.exception.RoleNotFoundException;
@@ -24,12 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,20 +79,6 @@ class UserServiceTest {
         when(userMapper.mapToUserWithRoleDTO(any())).thenReturn(new UserWithRoleDTO());
         //when
         Page<UserWithRoleDTO> result = userService.findUsersWithRoles(page, size, UserSortType.ID_ASC);
-        //then
-        assertFalse(result.isEmpty());
-    }
-    @Test
-    void shouldFindUsersWithRolesByCriteria() {
-        //given
-        int page = 0;
-        int size = 10;
-        Map<UserSearchCriteria, String> criteria = new HashMap<>();
-        when(userRepository.findAll(any(Specification.class), any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Collections.singletonList(new User()), PageRequest.of(page, size), 1));
-        when(userMapper.mapToUserWithRoleDTO(any())).thenReturn(new UserWithRoleDTO());
-        //when
-        Page<UserWithRoleDTO> result = userService.findUsersWithRolesByCriteria(page, size, UserSortType.ID_ASC, criteria);
         //then
         assertFalse(result.isEmpty());
     }

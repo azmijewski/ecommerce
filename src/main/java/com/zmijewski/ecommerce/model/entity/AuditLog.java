@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class AuditLog {
     private Long id;
     private String message;
     @CreationTimestamp
-    private Date createdAt;
+    private OffsetDateTime createdAt;
     @Enumerated(EnumType.STRING)
     private AuditLogType type;
 }

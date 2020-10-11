@@ -23,12 +23,11 @@ public class ProductDTO implements Serializable {
     @Min(0)
     private Integer quantity;
     private BigDecimal price;
-    private boolean isAvailable;
+    private boolean available;
     private String description;
     private String brand;
     @NotNull
     private Long brandId;
-    private String category;
     @NotNull
     private Long categoryId;
     private List<Long> imagesIds;

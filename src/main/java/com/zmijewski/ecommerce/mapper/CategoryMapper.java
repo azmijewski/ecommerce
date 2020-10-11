@@ -9,6 +9,9 @@ import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
+//    @Mappings({
+//            @Mapping(target = "imageId", source = "image.id")
+//    })
     CategoryDTO mapToDTO(Category category);
     Category mapToCategory(CategoryDTO categoryDTO);
     @Mappings({

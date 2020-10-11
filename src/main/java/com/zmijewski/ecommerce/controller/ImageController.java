@@ -23,6 +23,7 @@ public class ImageController {
     public ResponseEntity<?> deleteImageById(@PathVariable(name = "imageId") Long imageId) {
         log.info("Deleting image with id: {}", imageId);
         imageService.deleteImage(imageId);
+        log.info("Image deleted successfully");
         return ResponseEntity.noContent().build();
     }
 }

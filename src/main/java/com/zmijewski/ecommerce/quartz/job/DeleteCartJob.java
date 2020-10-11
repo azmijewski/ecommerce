@@ -17,6 +17,7 @@ public class DeleteCartJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        log.info("Start deleting old carts");
         cartService.deleteOldCarts();
     }
 }

@@ -6,13 +6,17 @@ import com.zmijewski.ecommerce.exception.CategoryNameAlreadyExistException;
 import com.zmijewski.ecommerce.exception.CategoryNotFoundException;
 import com.zmijewski.ecommerce.mapper.CategoryMapper;
 import com.zmijewski.ecommerce.model.entity.Category;
+import com.zmijewski.ecommerce.model.entity.Image;
 import com.zmijewski.ecommerce.repository.CategoryRepository;
+import com.zmijewski.ecommerce.repository.ImageRepository;
 import com.zmijewski.ecommerce.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Collections;
@@ -32,6 +36,8 @@ class CategoryServiceTest {
     CategoryRepository categoryRepository;
     @Mock
     CategoryMapper categoryMapper;
+    @Mock
+    ImageRepository imageRepository;
 
     @Test
     void shouldGetAll() {
@@ -63,23 +69,27 @@ class CategoryServiceTest {
     @Test
     void shouldSaveCategory() {
         //given
+        MultipartFile file = new MockMultipartFile("test", "test", "test", "test".getBytes());
         Long expectedId = 1L;
         Category savedCategory = new Category();
         savedCategory.setId(expectedId);
         when(categoryMapper.mapToCategory(any())).thenReturn(new Category());
+        when(imageRepository.save(any())).thenReturn(new Image());
         when(categoryRepository.save(any())).thenReturn(savedCategory);
         //when
-        Long result = categoryService.saveCategory(new CategoryDTO());
+        Long result = categoryService.saveCategory(new CategoryDTO(), file);
         //then
         assertEquals(expectedId, result);
     }
     @Test
     void shouldNotSaveCategoryIfNameAlreadyExist() {
         //given
+        MultipartFile file = new MockMultipartFile("test", "test", "test", "test".getBytes());
+        when(imageRepository.save(any())).thenReturn(new Image());
         when(categoryMapper.mapToCategory(any())).thenReturn(new Category());
         when(categoryRepository.save(any())).thenThrow(ConstraintViolationException.class);
         //when && then
-        assertThrows(CategoryNameAlreadyExistException.class, () -> categoryService.saveCategory(new CategoryDTO()));
+        assertThrows(CategoryNameAlreadyExistException.class, () -> categoryService.saveCategory(new CategoryDTO(), file));
     }
 
     @Test

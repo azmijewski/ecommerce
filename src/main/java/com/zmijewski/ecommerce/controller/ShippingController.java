@@ -49,6 +49,7 @@ public class ShippingController {
     public ResponseEntity<?> saveShipping(@RequestBody @Valid ShippingDTO shippingDTO) {
         log.info("Trying to save new shipment with name: {}, type: {}", shippingDTO.getName(), shippingDTO.getPaymentType());
         Long result = shippingService.saveShipping(shippingDTO);
+        log.info("Shipping saved successfully");
         URI location = uriBuilder.buildUriWithAppendedId(result);
         return ResponseEntity.created(location).build();
     }
@@ -57,6 +58,7 @@ public class ShippingController {
     public ResponseEntity<?> enableShipping(@PathVariable(name = "shippingId") Long shippingId) {
         log.info("Trying to enable shipment with id: {}", shippingId);
         shippingService.enableShipping(shippingId);
+        log.info("Shipping enabled");
         return ResponseEntity.noContent().build();
     }
     @PutMapping("shipments/{shippingId}/disabling")
@@ -64,6 +66,7 @@ public class ShippingController {
     public ResponseEntity<?> disableShipping(@PathVariable(name = "shippingId") Long shippingId) {
         log.info("Trying to disable shipment with id: {}", shippingId);
         shippingService.disableShipping(shippingId);
+        log.info("Shipping disabled");
         return ResponseEntity.noContent().build();
     }
 }

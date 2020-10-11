@@ -9,8 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -25,9 +25,9 @@ public class Cart {
     private Long id;
     private BigDecimal totalPrice;
     @CreationTimestamp
-    private Date createdAt;
+    private OffsetDateTime createdAt;
     @UpdateTimestamp
-    private Date updatedAt;
+    private OffsetDateTime updatedAt;
 
     @OneToOne
     @JoinColumn(name = "user_id")

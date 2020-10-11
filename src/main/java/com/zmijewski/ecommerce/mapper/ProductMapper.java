@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public interface ProductMapper {
     @Mappings({
             @Mapping(target = "brand", source = "brand.name"),
-            @Mapping(target = "category", source = "category.name")
     })
     ProductDTO mapToDTO(Product product);
 

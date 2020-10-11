@@ -71,6 +71,7 @@ public class ProductController {
                                          @RequestPart(name = "files")MultipartFile[] files) {
         log.info("Trying to save new Product with name: {}", productDTO.getName());
         Long result = productService.saveProduct(productDTO, files);
+        log.info("Product saved successfully");
         URI location = uriBuilder.buildUriWithAppendedId(result);
         return ResponseEntity.created(location).build();
     }
@@ -80,6 +81,7 @@ public class ProductController {
                                            @RequestBody @Valid ProductDTO productDTO) {
         log.info("Modifying product with id: {}", productId);
         productService.updateProduct(productId, productDTO);
+        log.info("Product modified successfully");
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("products/{productId}")
@@ -87,6 +89,7 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable(name = "productId") Long productId) {
         log.info("Trying to delete product with id: {}", productId);
         productService.deleteProduct(productId);
+        log.info("Product deleted successfully");
         return ResponseEntity.noContent().build();
     }
     @PutMapping("products/increasingQuantity")
@@ -95,6 +98,7 @@ public class ProductController {
                                                      @RequestParam(name = "quantity") @Min(1) Integer quantity) {
         log.info("Trying to increase product with id: {}, quantity by {}", productId, quantity);
         productService.increaseProductQuantity(quantity, productId);
+        log.info("Product quantity increased");
         return ResponseEntity.noContent().build();
     }
     @PutMapping("products/decreasingQuantity")
@@ -103,6 +107,7 @@ public class ProductController {
                                                      @RequestParam(name = "quantity") @Min(1) Integer quantity) {
         log.info("Trying to increase product with id: {}, quantity by {}", productId, quantity);
         productService.decreaseProductQuantity(quantity, productId);
+        log.info("Product quantity decreased");
         return ResponseEntity.noContent().build();
     }
     @PutMapping("products/{productId}/images")
@@ -111,6 +116,7 @@ public class ProductController {
                                              @RequestParam(name = "file") MultipartFile file) {
         log.info("Trying to add new image to product with id: {}", productId);
         productService.addImageToProduct(productId, file);
+        log.info("Image added to product");
         return ResponseEntity.noContent().build();
     }
 

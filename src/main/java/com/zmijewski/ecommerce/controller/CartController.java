@@ -36,6 +36,7 @@ public class CartController {
     public ResponseEntity<CartDTO> getNewCart() {
         log.info("Creating new cart");
         CartDTO result = cartService.createNewCart();
+        log.info("Cart created successfully");
         return ResponseEntity.ok(result);
     }
     @PutMapping("productToCart")
@@ -44,6 +45,7 @@ public class CartController {
                                               @RequestParam(name = "quantity") @Min(1) Integer quantity) {
         log.info("Adding {} products with id: {} to cart with id: {}", quantity, productId, cartId);
         cartService.addProductToCart(cartId, productId, quantity);
+        log.info("Product added successfully to cart");
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("productFromCart")
@@ -52,18 +54,21 @@ public class CartController {
                                               @RequestParam(name = "quantity") @Min(1) Integer quantity) {
         log.info("Deleting {} products with id: {} to cart with id: {}", quantity, productId, cartId);
         cartService.deleteProductFromCart(cartId, productId, quantity);
+        log.info("Product deleted successfully from cart");
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("carts/{cartId}/products")
     public ResponseEntity<?> clearCart(@PathVariable(name = "cartId") Long cartId) {
         log.info("Clearing cart with id: {}", cartId);
         cartService.clearCart(cartId);
+        log.info("Cart cleared successfully");
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("carts/{cartId}")
     public ResponseEntity<?> deleteCart(@PathVariable(name = "cartId") Long cartId) {
         log.info("Deleting cart with id: {}", cartId);
         cartService.deleteCart(cartId);
+        log.info("Cart deleted successfully");
         return ResponseEntity.noContent().build();
     }
     @PutMapping("/carts/{cartId}/toUser")
@@ -72,6 +77,7 @@ public class CartController {
                                               @PathVariable(name = "cartId") Long cartId) {
         log.info("Assigning cart with id: {} to user: {}", cartId, principal.getName());
         cartService.assignCartToUser(principal.getName(), cartId);
+        log.info("Cart assigned successfully");
         return ResponseEntity.noContent().build();
     }
 

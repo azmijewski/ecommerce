@@ -47,7 +47,7 @@ public class OrderController {
     @GetMapping("orders/{orderId}")
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable(name = "orderId") Long orderId) {
-        log.info("Getting orderd with id: {}", orderId);
+        log.info("Getting order with id: {}", orderId);
         OrderDTO result = orderService.getOrderById(orderId);
         return ResponseEntity.ok(result);
     }
@@ -60,6 +60,7 @@ public class OrderController {
                                                        @RequestParam(name = "paymentId") Long paymentId) {
         log.info("Creating order with paymentId: {}, shippingId: {} for user: {}", paymentId, shippingId, principal.getName());
         CreatedOrderDTO result = orderService.createOrder(principal.getName(), cartId, shippingId, paymentId);
+        log.info("Order created successfully");
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
@@ -69,6 +70,7 @@ public class OrderController {
                                                @RequestParam(name = "status") OrderStatus status) {
         log.info("Changing status of order with id: {} to status: {}", orderId, status);
         orderService.changeOrderStatus(orderId, status);
+        log.info("Status changed successfully");
         return ResponseEntity.noContent().build();
     }
 
@@ -85,6 +87,7 @@ public class OrderController {
                                             @RequestParam(name = "paymentId") String paymentId) {
         log.info("Executing payment with payerId: {}, paymentId: {}", payerId, paymentId);
         orderService.executePayment(paymentId, payerId);
+        log.info("Payment executed successfully");
         return ResponseEntity.noContent().build();
     }
 }

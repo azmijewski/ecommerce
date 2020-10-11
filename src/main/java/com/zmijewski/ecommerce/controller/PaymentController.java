@@ -49,6 +49,7 @@ public class PaymentController {
     public ResponseEntity<?> savePayment(@RequestBody @Valid PaymentDTO paymentDTO) {
         log.info("Trying to save new payment with name: {}, type: {}", paymentDTO.getName(), paymentDTO.getPaymentType());
         Long result = paymentService.savePayment(paymentDTO);
+        log.info("Payment saved successfully");
         URI location = uriBuilder.buildUriWithAppendedId(result);
         return ResponseEntity.created(location).build();
     }
@@ -57,6 +58,7 @@ public class PaymentController {
     public ResponseEntity<?> enablePayment(@PathVariable(name = "paymentId") Long paymentId) {
         log.info("Trying to enable payment with id: {}", paymentId);
         paymentService.enablePayment(paymentId);
+        log.info("Payment enabled");
         return ResponseEntity.noContent().build();
     }
     @PutMapping("payments/{paymentId}/disabling")
@@ -64,6 +66,7 @@ public class PaymentController {
     public ResponseEntity<?> disablePayment(@PathVariable(name = "paymentId") Long paymentId) {
         log.info("Trying to disable payment with id: {}", paymentId);
         paymentService.disablePayment(paymentId);
+        log.info("Payment disabled");
         return ResponseEntity.noContent().build();
     }
 }

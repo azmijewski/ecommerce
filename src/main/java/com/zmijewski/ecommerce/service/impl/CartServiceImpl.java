@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -159,8 +161,9 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public void deleteOldCarts() {
-        cartRepository.getOldCarts(new Date()).forEach(cartId -> {
+        cartRepository.getOldCarts(OffsetDateTime.now()).forEach(cartId -> {
             log.info("Deleting cart with id: {}", cartId);
             deleteCart(cartId);
         });

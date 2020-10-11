@@ -33,6 +33,7 @@ public class AddressController {
                                                @RequestBody @Valid AddressDTO addressDTO) {
         log.info("Adding address for user: {}", principal.getName());
         addressService.addAddressForUser(principal.getName(), addressDTO);
+        log.info("Address added successfully");
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("addresses/{addressId}")
@@ -40,6 +41,7 @@ public class AddressController {
     public ResponseEntity<?> deleteAddress(@PathVariable(name = "addressId") Long addressId) {
         log.info("Deleting address with id: {}", addressId);
         addressService.deleteAddress(addressId);
+        log.info("Address deleted successfully");
         return ResponseEntity.noContent().build();
     }
     @PutMapping("addresses/{addressId}")
@@ -48,6 +50,7 @@ public class AddressController {
                                                @RequestBody @Valid AddressDTO addressDTO) {
         log.info("Modifying address with id: {}", addressId);
         addressService.modifyAddress(addressId, addressDTO);
+        log.info("Address Modified successfully");
         return ResponseEntity.noContent().build();
     }
 

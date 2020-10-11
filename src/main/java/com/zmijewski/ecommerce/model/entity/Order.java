@@ -14,6 +14,8 @@ import org.hibernate.search.annotations.Resolution;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,9 +36,9 @@ public class Order {
     @CreationTimestamp
     @Field
     @DateBridge(resolution = Resolution.DAY)
-    private Date createdAt;
+    private OffsetDateTime createdAt;
     @UpdateTimestamp
-    private Date updatedAt;
+    private OffsetDateTime updatedAt;
 
     @Field
     private String token;

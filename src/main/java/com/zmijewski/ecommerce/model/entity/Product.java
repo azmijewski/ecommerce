@@ -21,6 +21,13 @@ import java.util.Map;
 @Entity
 @Indexed
 @ToString(exclude = {"brand", "category", "cartProducts", "orderProducts", "images"})
+@NamedEntityGraph(name = "product-graph",
+attributeNodes = {
+        @NamedAttributeNode(value = "images"),
+        @NamedAttributeNode(value = "attributes"),
+        @NamedAttributeNode(value = "brand")
+
+})
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,

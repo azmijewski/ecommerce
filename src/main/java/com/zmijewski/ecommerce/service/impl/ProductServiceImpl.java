@@ -1,5 +1,6 @@
 package com.zmijewski.ecommerce.service.impl;
 
+import com.zmijewski.ecommerce.dto.AuditDTO;
 import com.zmijewski.ecommerce.dto.ProductDTO;
 import com.zmijewski.ecommerce.dto.ShortProductDTO;
 import com.zmijewski.ecommerce.exception.BrandNotFoundException;
@@ -17,6 +18,7 @@ import com.zmijewski.ecommerce.repository.*;
 import com.zmijewski.ecommerce.service.ProductService;
 import com.zmijewski.ecommerce.specification.ProductSearchSpecification;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,23 +37,34 @@ import java.util.Map;
 @Log4j2
 public class ProductServiceImpl implements ProductService {
 
+    private static final String PRODUCT_ADDED_MESSAGE = "Added new product: ";
+    private static final String PRODUCT_MODIFY_MESSAGE = "Modified product: ";
+    private static final String PRODUCT_DELETE_MESSAGE = "Delete product: ";
+
+    private static final String AUDIT_QUEUE = "auditQueue";
+
     private final ProductRepository productRepository;
     private final ProductSearchRepository productSearchRepository;
     private final ProductMapper productMapper;
     private final ImageRepository imageRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
+    private final RabbitTemplate rabbitTemplate;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               ProductSearchRepository productSearchRepository,
-                              ProductMapper productMapper, ImageRepository imageRepository,
-                              CategoryRepository categoryRepository, BrandRepository brandRepository) {
+                              ProductMapper productMapper,
+                              ImageRepository imageRepository,
+                              CategoryRepository categoryRepository,
+                              BrandRepository brandRepository,
+                              RabbitTemplate rabbitTemplate) {
         this.productRepository = productRepository;
         this.productSearchRepository = productSearchRepository;
         this.productMapper = productMapper;
         this.imageRepository = imageRepository;
         this.categoryRepository = categoryRepository;
         this.brandRepository = brandRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -106,6 +119,8 @@ public class ProductServiceImpl implements ProductService {
             imageToSave.setProduct(savedProduct);
             imageRepository.save(imageToSave);
         });
+        AuditDTO auditDTO = new AuditDTO(PRODUCT_ADDED_MESSAGE + savedProduct);
+        rabbitTemplate.convertAndSend(AUDIT_QUEUE, auditDTO);
         return savedProduct.getId();
     }
 
@@ -114,7 +129,9 @@ public class ProductServiceImpl implements ProductService {
         Product productToUpdate = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Could not find product with id: " + productId));
         productMapper.mapProductToUpdate(productToUpdate, productDTO);
-        productRepository.save(productToUpdate);
+        Product editedProduct = productRepository.save(productToUpdate);
+        AuditDTO auditDTO = new AuditDTO(PRODUCT_MODIFY_MESSAGE + editedProduct);
+        rabbitTemplate.convertAndSend(AUDIT_QUEUE, auditDTO);
     }
 
     @Override
@@ -122,6 +139,8 @@ public class ProductServiceImpl implements ProductService {
         Product productToDelete = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Could not find product with id: " + productId));
         productRepository.delete(productToDelete);
+        AuditDTO auditDTO = new AuditDTO(PRODUCT_DELETE_MESSAGE + productToDelete);
+        rabbitTemplate.convertAndSend(AUDIT_QUEUE, auditDTO);
     }
 
     @Override

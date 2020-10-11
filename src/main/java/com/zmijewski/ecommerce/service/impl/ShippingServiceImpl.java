@@ -1,5 +1,6 @@
 package com.zmijewski.ecommerce.service.impl;
 
+import com.zmijewski.ecommerce.dto.AuditDTO;
 import com.zmijewski.ecommerce.dto.ShippingDTO;
 import com.zmijewski.ecommerce.exception.ShippingNotFoundException;
 import com.zmijewski.ecommerce.mapper.ShippingMapper;
@@ -7,6 +8,7 @@ import com.zmijewski.ecommerce.model.entity.Shipping;
 import com.zmijewski.ecommerce.model.enums.PaymentType;
 import com.zmijewski.ecommerce.repository.ShippingRepository;
 import com.zmijewski.ecommerce.service.ShippingService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +17,23 @@ import java.util.stream.Collectors;
 @Service
 public class ShippingServiceImpl implements ShippingService {
 
+    private static final String SHIPPING_ADDED_MESSAGE = "Added new shipping: ";
+    private static final String SHIPPING_ENABLED_MESSAGE = "Enabled shipping: ";
+    private static final String SHIPPING_DISABLED_MESSAGE = "Disabled shipping: ";
+
+    private static final String AUDIT_QUEUE = "auditQueue";
+
     private final ShippingRepository shippingRepository;
     private final ShippingMapper shippingMapper;
+    private final RabbitTemplate rabbitTemplate;
 
-    public ShippingServiceImpl(ShippingRepository shippingRepository, ShippingMapper shippingMapper) {
+
+    public ShippingServiceImpl(ShippingRepository shippingRepository,
+                               ShippingMapper shippingMapper,
+                               RabbitTemplate rabbitTemplate) {
         this.shippingRepository = shippingRepository;
         this.shippingMapper = shippingMapper;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -49,8 +62,10 @@ public class ShippingServiceImpl implements ShippingService {
     @Override
     public Long saveShipping(ShippingDTO shippingDTO) {
         Shipping shippingToSave = shippingMapper.mapToShipping(shippingDTO);
-        return shippingRepository.save(shippingToSave)
-                .getId();
+        Shipping savedShipping = shippingRepository.save(shippingToSave);
+        AuditDTO auditDTO = new AuditDTO(SHIPPING_ADDED_MESSAGE + savedShipping);
+        rabbitTemplate.convertAndSend(AUDIT_QUEUE, auditDTO);
+        return savedShipping.getId();
     }
 
     @Override
@@ -66,6 +81,14 @@ public class ShippingServiceImpl implements ShippingService {
         Shipping shippingToChangeAvailability = shippingRepository.findById(shippingId)
                 .orElseThrow(() -> new ShippingNotFoundException("Sould not find shipping with id: " + shippingId));
         shippingToChangeAvailability.setIsAvailable(status);
-        shippingRepository.save(shippingToChangeAvailability);
+        Shipping savedShipping = shippingRepository.save(shippingToChangeAvailability);
+        String message;
+        if (status) {
+            message = SHIPPING_ENABLED_MESSAGE + savedShipping;
+        } else {
+            message = SHIPPING_DISABLED_MESSAGE + savedShipping;
+        }
+        AuditDTO auditDTO = new AuditDTO(message);
+        rabbitTemplate.convertAndSend(AUDIT_QUEUE, auditDTO);
     }
 }

@@ -3,9 +3,9 @@ create procedure get_old_carts_id(
 	IN currentDate datetime
 )
 begin
- select id
- from cart
- where (updated_at is null and timestampdiff(MINUTE, currentDate, created_at) > 15) or (updated_at is not null and timestampdiff(MINUTE, currentDate, updated_at) > 15);
+    select c.id
+    from cart c
+    where timestampdiff(MINUTE, c.updated_at, currentDate)> 15;
 end $$
 DELIMITER ;
 

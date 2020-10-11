@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @Indexed
-@ToString(exclude = {"products"})
+@ToString(exclude = {"products", "image"})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category-generator")
@@ -26,5 +26,8 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Product> products = new ArrayList<>();
+
+    @OneToOne(orphanRemoval = true)
+    private Image image;
 
 }

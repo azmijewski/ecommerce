@@ -1,7 +1,6 @@
 package com.zmijewski.ecommerce.controller;
 
 import com.zmijewski.ecommerce.dto.*;
-import com.zmijewski.ecommerce.model.enums.UserSearchCriteria;
 import com.zmijewski.ecommerce.model.enums.UserSortType;
 import com.zmijewski.ecommerce.service.UserService;
 import com.zmijewski.ecommerce.util.ResponseUriBuilder;
@@ -16,7 +15,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.security.Principal;
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/")
@@ -50,16 +48,6 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("usersWithRolesByCriteria")
-    @Secured({"ROLE_ADMIN"})
-    public ResponseEntity<Page<UserWithRoleDTO>> getUsersWithRolesByCriteria(@RequestParam(name = "page") @Min(0) int page,
-                                                                             @RequestParam(name = "size") @Min(1) int size,
-                                                                             @RequestParam(name = "sort", defaultValue = "ID_ASC") UserSortType sortType,
-                                                                             @RequestParam Map<UserSearchCriteria, String> criteria) {
-        log.info("Getting users with roles page: {}, size{} by criteria: {}", page, size, criteria);
-        Page<UserWithRoleDTO> result = userService.findUsersWithRolesByCriteria(page, size, sortType, criteria);
-        return ResponseEntity.ok(result);
-    }
     @PostMapping("usersWithRoles")
     @Secured({"ROLE_ADMIN"})
     public ResponseEntity<Page<UserWithRoleDTO>> searchUsersWithRoles(@RequestParam(name = "page") @Min(0) int page,
@@ -73,7 +61,7 @@ public class UserController {
     @GetMapping("users/logged")
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     public ResponseEntity<UserWithAddressesDTO> getLoggedUser(Principal principal) {
-        log.info("GetTing logged user data with email: {}", principal.getName());
+        log.info("Getting logged user data with email: {}", principal.getName());
         UserWithAddressesDTO result = userService.findUserWithAddresses(principal.getName());
         return ResponseEntity.ok(result);
     }
@@ -81,6 +69,7 @@ public class UserController {
     public ResponseEntity<?> registerUser(@RequestBody @Valid RegistrationDTO registrationDTO) {
         log.info("Trying to register user with email: {}", registrationDTO.getEmail());
         userService.registerUser(registrationDTO);
+        log.info("User registered successfully");
         return ResponseEntity.noContent().build();
     }
     @PostMapping("users")
@@ -88,6 +77,7 @@ public class UserController {
     public ResponseEntity<?> addNewUser(@RequestBody @Valid UserWithRoleDTO userWithRoleDTO) {
         log.info("Trying to add new user with email: {}", userWithRoleDTO.getUser().getEmail());
         userService.addUser(userWithRoleDTO);
+        log.info("User added successfully");
         URI location =
                 uriBuilder.buildUriWithAddedPathAndEmail("/userByEmail", userWithRoleDTO.getUser().getEmail());
         return ResponseEntity.created(location).build();
@@ -98,6 +88,7 @@ public class UserController {
                                                @RequestBody @Valid UserDTO userDTO) {
         log.info("Modifying user with email: {}", principal.getName());
         userService.modifyUser(principal.getName(), userDTO);
+        log.info("User modified successfully");
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("users/logged")
@@ -105,13 +96,15 @@ public class UserController {
     public ResponseEntity<?> deleteLoggedUserAccount(Principal principal) {
         log.info("Deleting user with email: {}", principal.getName());
         userService.deleteAccount(principal.getName());
+        log.info("User deleted successfully");
         return ResponseEntity.noContent().build();
-    }
+    };
     @DeleteMapping("users/userByEmail")
     @Secured({"ROLE_ADMIN"})
     public ResponseEntity<?> deleteUserAccount(@RequestParam(name = "email") String email) {
         log.info("Deleting user with email: {}", email);
         userService.deleteAccount(email);
+        log.info("User deleted successfully");
         return ResponseEntity.noContent().build();
     }
     @PutMapping("users/confirmation")

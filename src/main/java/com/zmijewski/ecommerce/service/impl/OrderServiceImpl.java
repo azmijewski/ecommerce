@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -204,7 +206,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void cancelOrdersWaitingForExpire() {
-        orderRepository.getExpiredOrdersIdWhereWaitingForPayment(new Date()).forEach(orderId -> {
+        orderRepository.getExpiredOrdersIdWhereWaitingForPayment(OffsetDateTime.now()).forEach(orderId -> {
             log.info("Order with id: {} is going to be cancelled", orderId);
             changeOrderStatus(orderId, OrderStatus.CANCELLED);
         });
@@ -213,7 +215,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void sendRemindPaymentNotifications() {
         Integer daysToExpire = globalParameterRepository.getValueAsInteger(GlobalParameterName.INFORM_USER_ORDER_EXPIRE_IN_DAYS);
-        orderRepository.getOrdersToExpiredInDays(new Date(), daysToExpire).forEach(order -> {
+        orderRepository.getOrdersToExpiredInDays(OffsetDateTime.now(), daysToExpire).forEach(order -> {
             log.info("Send remind notification for order with id: {}", order.getId());
             String content = templateCreator.getOrderNearExpireTemplate(order.getId(), daysToExpire);
             addMailSendToQueue(order.getUser().getEmail(), orderNearExpiredSubject, content);

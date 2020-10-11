@@ -38,6 +38,7 @@ public class BrandController {
     public ResponseEntity<?> saveBrand(@RequestBody @Valid BrandDTO brandDTO) {
         log.info("Saving new brand with name: {}", brandDTO.getName());
         brandService.saveBrand(brandDTO);
+        log.info("Brand saved successfully");
         return ResponseEntity.noContent().build();
     }
     @PutMapping("brands/{brandId}")
@@ -46,6 +47,7 @@ public class BrandController {
                                          @RequestBody @Valid BrandDTO brandDTO) {
         log.info("Modifying brand with id: {}", brandId);
         brandService.modifyBrand(brandId, brandDTO);
+        log.info("Brand modified successfully");
         return ResponseEntity.noContent().build();
     }
 }

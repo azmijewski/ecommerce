@@ -10,6 +10,7 @@ import com.zmijewski.ecommerce.repository.AddressRepository;
 import com.zmijewski.ecommerce.repository.UserRepository;
 import com.zmijewski.ecommerce.service.AddressService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -38,25 +39,29 @@ public class CategoryController {
     }
     @PostMapping("categories")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<?> saveProduct(@RequestBody @Valid CategoryDTO categoryDTO) {
+    public ResponseEntity<?> saveCategory(@RequestPart(name = "data") @Valid CategoryDTO categoryDTO,
+                                         @RequestPart(name = "file") MultipartFile file) {
         log.info("Trying to save category with name: {}", categoryDTO.getName());
-        Long result = categoryService.saveCategory(categoryDTO);
+        Long result = categoryService.saveCategory(categoryDTO, file);
+        log.info("Category saved successfully");
         URI location = uriBuilder.buildUriWithAppendedId(result);
         return ResponseEntity.created(location).build();
     }
     @PutMapping("categories/{categoryId}")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<?> modifyProduct(@PathVariable(name = "categoryId") Long categoryId,
+    public ResponseEntity<?> modifyCategory(@PathVariable(name = "categoryId") Long categoryId,
                                            @RequestBody @Valid CategoryDTO categoryDTO) {
-        log.info("Trying to modify product with id: {}", categoryId);
+        log.info("Trying to modify category with id: {}", categoryId);
         categoryService.modifyCategory(categoryId, categoryDTO);
+        log.info("Category modified successfully");
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("categories/{categoryId}")
     @Secured("ROLE_ADMIN")
-    public ResponseEntity<?> deleteProduct(@PathVariable(name = "categoryId") Long categoryId) {
+    public ResponseEntity<?> deleteCategory(@PathVariable(name = "categoryId") Long categoryId) {
         log.info("Trying to delete category with id: {}", categoryId);
         categoryService.deleteCategory(categoryId);
+        log.info("Category deleted successfully");
         return ResponseEntity.noContent().build();
     }
 }
